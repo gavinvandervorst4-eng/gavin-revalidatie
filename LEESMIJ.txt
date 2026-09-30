@@ -1,0 +1,14 @@
+Gavin Revalidatie v6 – persoonlijke PWA
+Openen: https://gavinvandervorst4-eng.github.io/gavin-revalidatie/
+PIN: 201173
+Deze app is een persoonlijk hulpmiddel en geen officieel Rijndam-systeem.
+
+Nieuw in v6:
+- Klachten / gevoel / kracht per lichaamslocatie.
+- Dagelijkse pijnmetingen per locatie (0–10).
+- Grafiek met pijnontwikkeling over maximaal de laatste 12 metingen per gekozen locatie.
+- Uitgangssituatie voor geen gevoel en geen kracht kan worden aangepast.
+- Klachtenmetingen worden meegenomen in de rapportage.
+- Bestaande gegevens uit v5 blijven behouden.
+
+De 2 uur/10 min-cyclus loopt automatisch door zolang de app actief blijft; de timer gebruikt tijdstempels zodat hij bij terugkeer corrigeert. Geluid werkt wanneer de browser/app audio mag afspelen.

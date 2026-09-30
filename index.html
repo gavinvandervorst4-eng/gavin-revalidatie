@@ -33,9 +33,18 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 .check{display:flex;gap:9px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.check input{width:22px;height:22px;margin:0}
 .stat{font-size:27px;font-weight:850;color:var(--p)}.entry{border-top:1px solid var(--line);padding:11px 0}.entry:first-child{border-top:0}
 .notice{background:#fff3f2;border-left:4px solid var(--red);padding:11px;border-radius:10px;font-size:13px;line-height:1.45}
+.lock{position:fixed;inset:0;background:linear-gradient(135deg,#4c155a,#7d2b8a);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px}.lockbox{width:min(420px,100%);background:#fff;border-radius:24px;padding:25px;box-shadow:0 20px 60px #22002766;text-align:center}.lockbox h1{color:var(--p);margin:0 0 8px}.pin{font-size:28px;letter-spacing:8px;text-align:center}.hidden{display:none!important}.summaryok{background:#eef8f2;border-left:4px solid var(--green);padding:11px;border-radius:10px;font-size:13px}.summarywarn{background:#fff5e7;border-left:4px solid var(--orange);padding:11px;border-radius:10px;font-size:13px}.profilegrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.profileitem{background:#faf6fb;border-radius:12px;padding:10px}.profileitem b{display:block;color:var(--p)}.symgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.symbox{background:#faf6fb;border:1px solid var(--line);border-radius:12px;padding:10px}.symbox b{display:block;color:var(--p);margin-bottom:6px}.symcheck{display:flex;gap:7px;align-items:center;font-size:13px;margin:6px 0;color:var(--ink)}.symcheck input{width:20px;height:20px;margin:0}.chartwrap{overflow:hidden}.legendline{font-size:12px;color:var(--muted)}
+@media(max-width:600px){
+  body{font-size:16px}.title{font-size:25px}main{padding:10px 10px 92px}.card{border-radius:18px;padding:14px;margin-bottom:10px}.grid{grid-template-columns:1fr 1fr;gap:8px}button{min-height:56px;padding:14px 10px;font-size:15px}input,select,textarea{font-size:17px;padding:13px}.timer{font-size:38px}.profilegrid,.symgrid{grid-template-columns:1fr 1fr}nav{padding-bottom:10px;scroll-snap-type:x proximity}nav button{font-size:14px;padding:11px 12px;scroll-snap-align:start}
+  .iphonebar{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:1000;background:#fff;border:1px solid var(--line);box-shadow:0 8px 28px #32103b25;border-radius:18px;padding:7px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.iphonebar button{min-height:48px;padding:7px 4px;font-size:12px;border-radius:12px}.iphonebar .activeq{background:var(--p);color:#fff}
+  .summarycheck{display:grid;grid-template-columns:1fr;gap:7px}.summaryrow{display:flex;align-items:center;gap:9px;background:#faf6fb;border-radius:13px;padding:11px}.summaryrow .dot{width:12px;height:12px;border-radius:50%;background:var(--orange);flex:0 0 auto}.summaryrow.done .dot{background:var(--green)}.summaryrow b{flex:1}.summaryrow button{min-height:42px;padding:9px 10px}
+}
+@media(min-width:601px){.iphonebar{display:none}}
+
 </style>
 </head>
 <body>
+<div id="lock" class="lock"><div class="lockbox"><h1>Gavin • Revalidatie</h1><p class="small">Deze app is persoonlijk en beveiligd.</p><label for="pin">PIN</label><input id="pin" class="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••••"><button class="primary" style="width:100%;margin-top:12px" onclick="unlock()">Open app</button><p id="pinerr" class="small" style="color:var(--red);min-height:20px"></p></div></div>
 <header>
 <div class="brand">Persoonlijk revalidatielogboek</div>
 <div class="title">Gavin • Revalidatie</div>
@@ -43,11 +52,11 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 </header>
 <main>
 <nav>
-<button onclick="page('home')">Vandaag</button>
+<button onclick="page('home')">Vandaag</button><button onclick="page('summary')">📋 Samenvatting</button>
 <button onclick="page('walk')">🚶 Lopen</button>
 <button onclick="page('ergo')">🪑 Ergo</button>
 <button onclick="page('food')">🥗 Diëtist</button>
-<button onclick="page('team')">👥 Team</button>
+<button onclick="page('team')">👥 Dag & Team</button><button onclick="page('defects')">🩹 Klachten</button>
 <button onclick="page('meds')">💊 Medicatie</button>
 <button onclick="page('agenda')">📅 Afspraken</button><button onclick="page('weight')">⚖️ Gewicht</button><button onclick="page('evening')">🍫 Avond</button><button onclick="page('share')">📤 Log</button>
 </nav>
@@ -79,6 +88,8 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 </div>
 </section>
 
+<section id="summary" class="page"><div class="card"><h2>📋 Mijn dag afronden</h2><p class="small">Het doel is simpel: <b>aan het einde van de dag alles invullen.</b> Groen = ingevuld. Oranje = nog doen. Tik op een ontbrekend onderdeel om er direct naartoe te gaan.</p><div id="dailyChecklist" class="summarycheck"></div><div id="summaryText" style="margin-top:10px"></div><div id="missingList" style="margin-top:10px"></div><button class="primary" style="width:100%;margin-top:10px" onclick="finishDay()">✅ Dag compleet / afsluiten</button><button style="width:100%;margin-top:8px" onclick="enableNotifications()">🔔 Herinneringen toestaan</button></div><div class="card"><h2>Mijn profiel</h2><div class="profilegrid"><div class="profileitem"><b>Lengte</b>189 cm</div><div class="profileitem"><b>Huidig gewicht</b>105 kg</div><div class="profileitem"><b>Streefgewicht</b>85 kg</div><div class="profileitem"><b>Verschil</b>20 kg</div></div><p class="small" style="margin-bottom:0">Gewicht is een registratiewaarde; bespreek doelen en veranderingen met je behandelteam.</p></div><div class="card"><h2>Mijn contactgegevens</h2><div class="profilegrid"><div class="profileitem"><b>E-mail</b>Gavinvdv73@hotmail.com</div><div class="profileitem"><b>Telefoon</b>0645722004</div></div></div><div class="card"><h2>🔔 Dagherinnering</h2><p class="small">Bij het openen controleert de app automatisch of je dag compleet is. Vanaf 18:00 wordt extra aandacht gevraagd voor ontbrekende onderdelen. Een echte iPhone-melding terwijl de app volledig gesloten is vraagt een apart push-meldingssysteem.</p></div><div class="card"><h2>🗂️ Samenvatting opslaan / afdrukken</h2><p class="small">Maak een overzicht van een dag, week of maand. Opslaan bewaart een momentopname in de app. Afdrukken opent de iPhone-afdrukfunctie, waarmee je ook als PDF kunt bewaren.</p><div class="grid"><button onclick="saveSummaryPeriod('day')">💾 Dag</button><button onclick="printSummaryPeriod('day')">🖨️ Dag</button><button onclick="saveSummaryPeriod('week')">💾 Week</button><button onclick="printSummaryPeriod('week')">🖨️ Week</button><button onclick="saveSummaryPeriod('month')">💾 Maand</button><button onclick="printSummaryPeriod('month')">🖨️ Maand</button></div><div id="savedSummaries" style="margin-top:12px"></div></div></section>
+
 <section id="walk" class="page"><div class="card"><h2>🚶 Fysio — wandeltest</h2>
 <p class="small">Meet hoe ver en hoe lang je kunt lopen voordat het lastig wordt, pijn ontstaat of het niet meer gaat. Noteer daarna de hersteltijd.</p>
 <div class="timer" id="wtimer">00:00</div>
@@ -92,8 +103,8 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 <button class="primary" onclick="saveWalk()">Wandeling opslaan</button></div></section>
 
 <section id="ergo" class="page"><div class="card"><h2>🪑 Ergo — 2 uur werken / 10 min plat</h2>
-<p class="small">Gebruik de timer voor het afgesproken ritme. Let tijdens het werken op je schouders en registreer wat er gebeurt als pijn ontstaat.</p>
-<div class="timer" id="etimer">02:00:00</div>
+<p class="small">De cyclus loopt automatisch door: <b>2 uur werken → 10 minuten plat → opnieuw 2 uur</b>. Laat de app open als je wilt dat de timer actief blijft. Bij elke overgang geeft de app een geluid.</p>
+<div class="timer" id="etimer">02:00:00</div><div id="ecycle" class="tag">2 uur werken</div>
 <div class="row"><button class="green" onclick="eStart()">Start</button><button class="orange" onclick="eStop()">Stop</button><button onclick="eReset()">Reset</button></div>
 <p id="estatus" class="small">Klaar voor 2 uur.</p>
 <label>Schouders naar beneden / ontspannen</label><select id="esh"><option>Goed gelukt</option><option>Regelmatig op gelet</option><option>Moeilijk vol te houden</option></select>
@@ -115,7 +126,7 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 <label>Wat ging goed / moeilijk?</label><textarea id="fn"></textarea>
 <button class="primary" onclick="saveFood()">Voeding opslaan</button></div></section>
 
-<section id="team" class="page"><div class="card"><h2>👥 Dagelijks functioneren & behandelteam</h2>
+<section id="team" class="page"><div class="card"><h2>👥 Dag & Team</h2><p class="small"><b>Wat betekent Team?</b> Hier leg je dagelijks vast hoe het met je gaat en wat je wilt bespreken met je revalidatieteam, zoals fysiotherapeut, ergotherapeut, diëtist, psycholoog, maatschappelijk werk en revalidatiearts.</p>
 <label>Slaap</label><select id="sl"><option>Goed</option><option>Redelijk</option><option>Slecht</option></select>
 <label>Hoe ging het opstaan?</label><textarea id="rise"></textarea>
 <label>Aankleden</label><select id="dress"><option>Zelfstandig</option><option>Gedeeltelijk zelf</option><option>Met hulp</option><option>Niet gelukt</option></select>
@@ -127,9 +138,30 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 <label>Wat wil je bespreken met psycholoog / maatschappelijk werk / arts?</label><textarea id="teamnote"></textarea>
 <button class="primary" onclick="saveTeam()">Dagregistratie opslaan</button></div></section>
 
-<section id="meds" class="page"><div class="card"><h2>💊 Tabletten</h2>
-<p class="small">Alleen een herinneringslijst. De app bepaalt geen dosering en verandert geen voorschrift.</p>
-<label>Naam</label><input id="mn">
+<section id="defects" class="page"><div class="card"><h2>🩹 Klachten, gevoel & kracht</h2>
+<p class="small">Hier houd je bij <b>wat je waar merkt</b>: pijn, minder/geen gevoel en minder/geen kracht. De app is een registratiemiddel; bespreek veranderingen of nieuwe klachten met je behandelteam.</p>
+<div class="notice"><b>Beginsituatie die je zelf hebt opgegeven</b><br>Geen gevoel: benen, billen en onderrug. Geen kracht: rechterbeen en linkerpols. Je kunt deze uitgangssituatie hieronder aanpassen als je situatie verandert.</div>
+<h3>Mijn uitgangssituatie</h3>
+<div id="baselineGrid"></div>
+<button class="primary" onclick="saveBaseline()">Uitgangssituatie opslaan</button></div>
+<div class="card"><h2>📍 Dagelijkse meting</h2>
+<label>Locatie</label><select id="cloc"></select>
+<label>Pijn op deze locatie (0–10)</label><input id="cpain" type="number" min="0" max="10" value="0">
+<label class="check"><input id="cnumb" type="checkbox"><span><b>Geen / veel minder gevoel</b></span></label>
+<label class="check"><input id="cweak" type="checkbox"><span><b>Geen / veel minder kracht</b></span></label>
+<label>Wat merk je precies?</label><textarea id="cnote" placeholder="Bijv. tintelingen, doof gevoel, pijn bij lopen, kracht minder dan gisteren..." ></textarea>
+<button class="primary" onclick="saveComplaint()">Meting opslaan</button></div>
+<div class="card"><h2>📈 Pijnontwikkeling</h2>
+<p class="small">Kies een locatie. De grafiek laat je opgeslagen pijnmetingen voor die locatie zien, zodat je veranderingen over meerdere metingen kunt volgen.</p>
+<label>Locatie voor grafiek</label><select id="chartloc" onchange="renderPainChart()"></select>
+<canvas id="painChart" height="240" style="width:100%;display:block;border:1px solid var(--line);border-radius:14px;background:#fff"></canvas>
+<div id="painStats" class="small" style="margin-top:9px"></div>
+<div id="complaintList"></div></div></section>
+
+<section id="meds" class="page"><div class="card"><h2>💊 Medicatie</h2>
+<p class="small">Herinneringslijst op basis van wat je zelf hebt opgegeven. Controleer tijden en doseringen altijd met je voorschrift/apotheek. De app verandert geen medicatie.</p>
+<div class="notice">Je hebt opgegeven: Pregabaline 150 mg 2×/dag; oxycodon langwerkend 2×/dag; paracetamol 1000 mg 2×/dag; macrogol 1×/dag; kortwerkende morfine zo nodig, maximaal 1×/dag. De app neemt dit alleen over als registratielijst.</div>
+<label>Naam + dosering</label><input id="mn">
 <label>Tijd</label><input id="mt" type="time">
 <label>Opmerking</label><input id="mo">
 <button class="primary" onclick="addMed()">Toevoegen</button></div>
@@ -141,11 +173,11 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 <label>Datum</label><input id="adate" type="date">
 <label>Tijd</label><input id="atime" type="time">
 <label>Behandelaar / discipline</label><select id="atype"><option>Fysiotherapie</option><option>Ergotherapie</option><option>Diëtist</option><option>Psycholoog</option><option>Maatschappelijk werk</option><option>Revalidatiearts</option><option>Verpleegkundige</option><option>Andere afspraak</option></select>
-<label>Onderwerp</label><input id="asubject" placeholder="Bijv. voortgang / controle / behandeling">
+<label>Onderwerp</label><input id="asubject" placeholder="Bijv. voortgang / controle / behandeling"><label>Herinnering</label><select id="arem"><option>Geen</option><option>Op de dag zelf</option><option>1 dag ervoor</option><option>2 dagen ervoor</option></select>
 <label>Opmerking</label><textarea id="anote"></textarea>
 <button class="primary" onclick="addAppointment()">Afspraak toevoegen</button>
 </div>
-<div class="card"><h2>Mijn afspraken</h2><div id="alist"></div></div></section>
+<div class="card"><h2>Mijn afspraken</h2><div id="alist"></div></div><div class="card"><h2>Revalidatiearts</h2><p class="small">Gebruik hierboven <b>Revalidatiearts</b> als behandelaar. Je kunt daar datum, tijd, onderwerp en een herinneringskeuze vastleggen.</p></div></section>
 
 <section id="weight" class="page"><div class="card"><h2>⚖️ Gewicht</h2>
 <p class="small">Registreer je gewicht wanneer je dat met je behandelteam hebt afgesproken. De app geeft geen oordeel over je gewicht.</p>
@@ -173,44 +205,124 @@ textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
 </div>
 <div class="card"><h2>Privacy</h2><div class="notice">Dit is een persoonlijk hulpmiddel en geen officieel Rijndam-systeem. Zet geen informatie in de app die je niet op je eigen telefoon wilt bewaren of delen.</div></div></section>
 </main>
+<div class="iphonebar"><button onclick="page('home')">🏠<br>Vandaag</button><button onclick="page('summary')">📋<br>Dag</button><button onclick="page('walk')">🚶<br>Lopen</button><button onclick="page('ergo')">🪑<br>Ergo</button></div>
 <div id="toast" style="position:fixed;left:14px;right:14px;bottom:18px;background:#32103b;color:#fff;padding:13px;border-radius:13px;text-align:center;display:none"></div>
 <script>
-const KEY='gavin-incomplete-dwarslaesie-v3',MKEY='gavin-meds-v3',$=id=>document.getElementById(id);
+const KEY='gavin-incomplete-dwarslaesie-v4',MKEY='gavin-meds-v4',CKEY='gavin-klachten-v1',BKEY='gavin-klachten-baseline-v1',$=id=>document.getElementById(id);
+const PIN_HASH='9053a5939d7b4a748f4c4fa56fc9409ba4c00b6fd0062556803d961509b91d94';
+// PIN is checked locally; it is not displayed in the interface. This is a convenience lock, not high-security encryption.
+async function hashPin(v){const b=new TextEncoder().encode(v),h=await crypto.subtle.digest('SHA-256',b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function unlock(){let p=$('pin').value;if(!/^\d{6}$/.test(p)){ $('pinerr').textContent='Vul de 6-cijferige PIN in.';return }let h=await hashPin(p);if(h===PIN_HASH){$('lock').classList.add('hidden');$('pin').value='';home();}else $('pinerr').textContent='Onjuiste PIN.'}
+$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
+if(!localStorage.getItem(KEY)&&localStorage.getItem('gavin-incomplete-dwarslaesie-v3'))localStorage.setItem(KEY,localStorage.getItem('gavin-incomplete-dwarslaesie-v3'));
+if(!localStorage.getItem('gavin-appts-v2')&&localStorage.getItem('gavin-appts-v1'))localStorage.setItem('gavin-appts-v2',localStorage.getItem('gavin-appts-v1'));
 const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}},put=a=>localStorage.setItem(KEY,JSON.stringify(a));
-function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('page','active');if(id==='home')home();if(id==='meds')renderMeds();if(id==='agenda')renderAppointments();if(id==='weight')renderWeights();scrollTo(0,0)}
-function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',1800)}
-function add(type,obj){let a=get();a.unshift({id:Date.now(),date:new Date().toISOString(),type,...obj});put(a);toast('Opgeslagen');home()}
-let ws=0,wi=null;function wf(s){return [Math.floor(s/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')}
-function wsStart(){if(wi)return;let st=Date.now()-ws*1000;wi=setInterval(()=>{ws=Math.floor((Date.now()-st)/1000);$('wtimer').textContent=wf(ws)},300)}
-function wsStop(){clearInterval(wi);wi=null}function wsReset(){wsStop();ws=0;$('wtimer').textContent='00:00'}
+function todayKey(d=new Date()){return d.toLocaleDateString('nl-NL')}
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('page','active');if(id==='home')home();if(id==='summary')renderSummary();if(id==='meds')renderMeds();if(id==='agenda')renderAppointments();if(id==='weight')renderWeights();if(id==='defects')renderDefects();scrollTo(0,0)}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
+function add(type,obj){let a=get();a.unshift({id:Date.now(),date:new Date().toISOString(),type,...obj});put(a);toast('Opgeslagen');home();renderSummary()}
+let ws=0,wi=null,wsStartedAt=null;
+function wf(s){return [Math.floor(s/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')}
+function updateWalk(){if(wsStartedAt){ws=Math.max(0,Math.floor((Date.now()-wsStartedAt)/1000));$('wtimer').textContent=wf(ws)}}
+function wsStart(){if(wi)return;wsStartedAt=Date.now()-ws*1000;localStorage.setItem('gavin-walk-running',JSON.stringify({startedAt:wsStartedAt,savedAt:Date.now()}));updateWalk();wi=setInterval(updateWalk,300)}
+function wsStop(){clearInterval(wi);wi=null;localStorage.removeItem('gavin-walk-running');updateWalk()}
+function wsReset(){wsStop();ws=0;wsStartedAt=null;$('wtimer').textContent='00:00'}
+function restoreWalk(){let raw=localStorage.getItem('gavin-walk-running');if(!raw)return;try{let x=JSON.parse(raw);wsStartedAt=Number(x.startedAt);if(wsStartedAt){updateWalk();wi=setInterval(updateWalk,300)}}catch(e){localStorage.removeItem('gavin-walk-running')}}
 function saveWalk(){add('fysio',{seconds:ws,meters:$('wm').value,km:$('wk').value,limit:$('wl').value,pain:$('wp').value,recovery:$('wr').value,recoveryNote:$('wrt').value});wsReset()}
-let er=7200,ei=null;function ef(s){let h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return[h,m,x].map(v=>String(v).padStart(2,'0')).join(':')}
-function eStart(){if(ei)return;let st=Date.now()-(7200-er)*1000;ei=setInterval(()=>{er=Math.max(0,7200-Math.floor((Date.now()-st)/1000));$('etimer').textContent=ef(er);if(er===0){eStop();$('estatus').textContent='2 uur voorbij — tijd voor 10 minuten platliggen.';flatStart()}},500);$('estatus').textContent='2 uur loopt.'}
-function eStop(){clearInterval(ei);ei=null}function eReset(){eStop();er=7200;$('etimer').textContent=ef(er);$('estatus').textContent='Klaar voor 2 uur.'}
-function saveErgo(){add('ergo',{shoulders:$('esh').value,when:$('ewhen').value,pain:$('ep').value,action:$('ewhat').value,flat:$('eflat').value,note:$('enote').value})}
-let fs=600,fi=null;function flatStart(){clearInterval(fi);fs=600;$('ft').textContent=ef(fs);fi=setInterval(()=>{fs--;if(fs<=0){fs=0;clearInterval(fi);toast('10 minuten platliggen voorbij.')}$('ft').textContent=ef(fs)},1000)}function flatStop(){clearInterval(fi);fi=null}
+
+let er=7200,ei=null,ecycle='work',eEndAt=null,flatEndAt=null,fi=null,fs=600;
+function ef(s){let h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return[h,m,x].map(v=>String(v).padStart(2,'0')).join(':')}
+function beep(freq=740,dur=0.35){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.type='sine';g.gain.value=.18;o.connect(g);g.connect(c.destination);o.start();setTimeout(()=>{o.stop();c.close()},dur*1000)}catch(e){}}
+function cycleSound(){beep(740,.25);setTimeout(()=>beep(980,.35),300)}
+function persistErgo(){localStorage.setItem('gavin-ergo-running',JSON.stringify({mode:ecycle,workEndAt:eEndAt,flatEndAt:flatEndAt,workRemaining:er,flatRemaining:fs,savedAt:Date.now()}))}
+function renderErgo(){ $('etimer').textContent=ef(er); $('ft').textContent=ef(fs); $('ecycle').textContent=ecycle==='work'?'2 uur werken':'10 minuten plat'; }
+function startWorkCycle(endAt){ecycle='work';eEndAt=endAt||Date.now()+er*1000;flatEndAt=null;clearInterval(fi);fi=null;clearInterval(ei);ei=setInterval(()=>{er=Math.max(0,Math.ceil((eEndAt-Date.now())/1000));$('etimer').textContent=ef(er);if(er<=0){clearInterval(ei);ei=null;cycleSound();startFlatCycle(Date.now()+600000)}},250);$('estatus').textContent='2 uur loopt.';renderErgo();persistErgo()}
+function startFlatCycle(endAt){ecycle='flat';flatEndAt=endAt||Date.now()+600000;eEndAt=null;er=0;clearInterval(ei);ei=null;clearInterval(fi);fi=setInterval(()=>{fs=Math.max(0,Math.ceil((flatEndAt-Date.now())/1000));$('ft').textContent=ef(fs);if(fs<=0){clearInterval(fi);fi=null;cycleSound();er=7200;fs=600;startWorkCycle(Date.now()+7200000)}},250);$('estatus').textContent='10 minuten platliggen loopt.';renderErgo();persistErgo()}
+function eStart(){if(ei||fi)return;startWorkCycle(Date.now()+er*1000)}
+function eStop(){clearInterval(ei);ei=null;clearInterval(fi);fi=null;persistErgo()}
+function eReset(){clearInterval(ei);ei=null;clearInterval(fi);fi=null;er=7200;fs=600;ecycle='work';eEndAt=null;flatEndAt=null;localStorage.removeItem('gavin-ergo-running');renderErgo();$('estatus').textContent='Klaar voor 2 uur.'}
+function flatStart(auto=false){if(ei||fi)return;startFlatCycle(Date.now()+fs*1000);if(auto)$('estatus').textContent='10 minuten platliggen loopt.'}
+function flatStop(){clearInterval(fi);fi=null;persistErgo()}
+function restoreErgo(){let raw=localStorage.getItem('gavin-ergo-running');if(!raw)return;try{let x=JSON.parse(raw);ecycle=x.mode||'work';er=Number(x.workRemaining)||7200;fs=Number(x.flatRemaining)||600;eEndAt=x.workEndAt?Number(x.workEndAt):null;flatEndAt=x.flatEndAt?Number(x.flatEndAt):null;let now=Date.now();if(ecycle==='work'&&eEndAt){if(eEndAt<=now){cycleSound();startFlatCycle(now+600000)}else{er=Math.ceil((eEndAt-now)/1000);startWorkCycle(eEndAt)}}else if(ecycle==='flat'&&flatEndAt){if(flatEndAt<=now){cycleSound();startWorkCycle(now+7200000)}else{fs=Math.ceil((flatEndAt-now)/1000);startFlatCycle(flatEndAt)}}renderErgo()}catch(e){localStorage.removeItem('gavin-ergo-running')}}
 function saveFood(){add('dietist',{ontbijt:$('b').checked,lunch:$('l').checked,avond:$('d').checked,eiwit:$('z').checked,note:$('fn').value})}
 function saveTeam(){add('team',{sleep:$('sl').value,rise:$('rise').value,dress:$('dress').value,help:$('help').value,energy:$('energy').value,pain:$('pain').value,obstacles:$('ob').value,better:$('better').value,team:$('teamnote').value})}
 function meds(){try{return JSON.parse(localStorage.getItem(MKEY)||'[]')}catch(e){return[]}}
-function addMed(){let a=meds();a.push({id:Date.now(),name:$('mn').value,time:$('mt').value,note:$('mo').value});localStorage.setItem(MKEY,JSON.stringify(a));$('mn').value='';$('mo').value='';renderMeds();toast('Tablet toegevoegd')}
-function renderMeds(){let a=meds().sort((x,y)=>x.time.localeCompare(y.time));$('ml').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.time}</span> <b>${x.name}</b><br><span class="small">${x.note||''}</span><br><button onclick="delMed(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen tabletten.</p>'}
+const defaultMeds=[['Pregabaline 150 mg','','2× per dag — tijd invullen volgens voorschrift'],['Oxycodon langwerkend','','2× per dag — dosering/tijd controleren met voorschrift'],['Paracetamol 1000 mg','','2× per dag — tijd invullen volgens voorschrift'],['Macrogol','','1× per dag — tijd/dosering controleren met voorschrift'],['Morfine kortwerkend','','zo nodig, maximaal 1× per dag — alleen volgens voorschrift']];
+function seedMeds(){if(localStorage.getItem(MKEY))return;localStorage.setItem(MKEY,JSON.stringify(defaultMeds.map((x,i)=>({id:Date.now()+i,name:x[0],time:x[1],note:x[2]}))))}
+function addMed(){let a=meds();a.push({id:Date.now(),name:$('mn').value,time:$('mt').value,note:$('mo').value});localStorage.setItem(MKEY,JSON.stringify(a));$('mn').value='';$('mo').value='';renderMeds();toast('Medicatie toegevoegd');renderSummary()}
+function renderMeds(){seedMeds();let a=meds().sort((x,y)=>x.time.localeCompare(y.time));$('ml').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.time}</span> <b>${x.name}</b><br><span class="small">${x.note||''}</span><br><button onclick="delMed(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen medicatie.</p>'}
 function delMed(id){localStorage.setItem(MKEY,JSON.stringify(meds().filter(x=>x.id!==id)));renderMeds()}
-function report(days){let cut=Date.now()-days*86400000,a=get().filter(x=>new Date(x.date).getTime()>=cut),ap=appointments(),we=weights().filter(x=>new Date(x.date).getTime()>=cut),s='GAVIN – REVALIDATIELOG\\nIncomplete dwarslaesie • persoonlijk overzicht\\nPeriode: laatste '+days+' dag(en)\\nGemaakt: '+new Date().toLocaleString('nl-NL')+'\\n\\n';a.reverse().forEach(x=>{s+='------------------------------\\n'+new Date(x.date).toLocaleString('nl-NL')+'\\n'+x.type.toUpperCase()+'\\n'+JSON.stringify(x,null,2)+'\\n'});return s}
+const complaintLocations=['Onderrug','Billen','Rechterbeen','Linkerbeen','Rechtervoet','Linkervoet','Rechterpols/hand','Linkerpols/hand','Rechterarm','Linkerarm','Nek','Schouders','Andere locatie'];
+const baselineDefault={
+'Onderrug':{pain:false,numb:true,weak:false},'Billen':{pain:false,numb:true,weak:false},'Rechterbeen':{pain:false,numb:true,weak:true},'Linkerbeen':{pain:false,numb:true,weak:false},'Rechtervoet':{pain:false,numb:true,weak:false},'Linkervoet':{pain:false,numb:true,weak:false},'Rechterpols/hand':{pain:false,numb:false,weak:false},'Linkerpols/hand':{pain:false,numb:false,weak:true},'Rechterarm':{pain:false,numb:false,weak:false},'Linkerarm':{pain:false,numb:false,weak:false},'Nek':{pain:false,numb:false,weak:false},'Schouders':{pain:false,numb:false,weak:false},'Andere locatie':{pain:false,numb:false,weak:false}};
+function complaints(){try{return JSON.parse(localStorage.getItem(CKEY)||'[]')}catch(e){return[]}}
+function baseline(){try{return JSON.parse(localStorage.getItem(BKEY)||'null')||baselineDefault}catch(e){return baselineDefault}}
+function renderLocationSelects(){let opts=complaintLocations.map(x=>`<option>${x}</option>`).join('');$('cloc').innerHTML=opts;$('chartloc').innerHTML=opts}
+function renderDefects(){renderLocationSelects();let b=baseline();$('baselineGrid').innerHTML='<div class="symgrid">'+complaintLocations.map((loc,i)=>{let x=b[loc]||{};return `<div class="symbox"><b>${loc}</b><label class="symcheck"><input type="checkbox" data-base="pain" data-loc="${i}" ${x.pain?'checked':''}> Pijn</label><label class="symcheck"><input type="checkbox" data-base="numb" data-loc="${i}" ${x.numb?'checked':''}> Geen / weinig gevoel</label><label class="symcheck"><input type="checkbox" data-base="weak" data-loc="${i}" ${x.weak?'checked':''}> Geen / weinig kracht</label></div>`}).join('')+'</div>';let cs=complaints();let last=cs.slice().sort((a,b)=>b.id-a.id).slice(0,12);$('complaintList').innerHTML=last.length?'<h3>Laatste metingen</h3>'+last.map(x=>`<div class="entry"><span class="tag">${new Date(x.date).toLocaleDateString('nl-NL')} ${new Date(x.date).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}</span> <b>${x.location}</b><br><span class="small">Pijn ${x.pain}/10 • ${x.numb?'geen/weinig gevoel • ':''}${x.weak?'geen/weinig kracht • ':''}${x.note||''}</span></div>`).join(''):'<p class="small">Nog geen klachtenmetingen opgeslagen.</p>';renderPainChart()}
+function saveBaseline(){let out={};document.querySelectorAll('[data-base]').forEach(el=>{let loc=complaintLocations[Number(el.dataset.loc)];out[loc]=out[loc]||{pain:false,numb:false,weak:false};out[loc][el.dataset.base]=el.checked});localStorage.setItem(BKEY,JSON.stringify(out));toast('Uitgangssituatie opgeslagen');renderDefects()}
+function saveComplaint(){let pain=Math.max(0,Math.min(10,Number($('cpain').value)||0));let a=complaints();a.unshift({id:Date.now(),date:new Date().toISOString(),location:$('cloc').value,pain,numb:$('cnumb').checked,weak:$('cweak').checked,note:$('cnote').value.trim()});localStorage.setItem(CKEY,JSON.stringify(a));$('cnote').value='';$('cpain').value='0';$('cnumb').checked=false;$('cweak').checked=false;toast('Klachtenmeting opgeslagen');renderDefects();renderSummary()}
+function renderPainChart(){let c=$('painChart');if(!c)return;let loc=$('chartloc').value||complaintLocations[0],rows=complaints().filter(x=>x.location===loc).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(-12);let dpr=window.devicePixelRatio||1,w=c.clientWidth||320,h=240;c.width=w*dpr;c.height=h*dpr;let ctx=c.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);let pad={l:38,r:14,t:18,b:40};ctx.strokeStyle='#e2d7e4';ctx.lineWidth=1;for(let i=0;i<=10;i+=2){let y=pad.t+(10-i)*(h-pad.t-pad.b)/10;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillStyle='#746976';ctx.font='11px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';ctx.fillText(String(i),10,y+4)}if(!rows.length){ctx.fillStyle='#746976';ctx.font='13px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';ctx.fillText('Nog geen metingen voor '+loc+'.',pad.l,110);$('painStats').textContent='Sla meerdere metingen op om een trend te zien.';return}let plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;ctx.strokeStyle='#5a1a68';ctx.lineWidth=2.5;ctx.beginPath();rows.forEach((r,i)=>{let x=rows.length===1?pad.l+plotW/2:pad.l+i*plotW/(rows.length-1),y=pad.t+(10-r.pain)*plotH/10;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();rows.forEach((r,i)=>{let x=rows.length===1?pad.l+plotW/2:pad.l+i*plotW/(rows.length-1),y=pad.t+(10-r.pain)*plotH/10;ctx.fillStyle='#7d2b8a';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#746976';ctx.font='10px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText(new Date(r.date).toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit'}),x,h-15)});ctx.textAlign='left';let vals=rows.map(x=>x.pain),avg=vals.reduce((a,b)=>a+b,0)/vals.length;let latest=rows[rows.length-1].pain;$('painStats').textContent=`${rows.length} meting(en) • laatste pijn ${latest}/10 • gemiddelde ${avg.toFixed(1)}/10 • periode ${new Date(rows[0].date).toLocaleDateString('nl-NL')} t/m ${new Date(rows[rows.length-1].date).toLocaleDateString('nl-NL')}`}
+window.addEventListener('resize',()=>{if(document.getElementById('defects')?.classList.contains('active'))renderPainChart()});
+
+function appointments(){try{return JSON.parse(localStorage.getItem('gavin-appts-v2')||'[]')}catch(e){return[]}}
+function addAppointment(){let a=appointments();a.push({id:Date.now(),date:$('adate').value,time:$('atime').value,type:$('atype').value,subject:$('asubject').value,note:$('anote').value,reminder:$('arem').value});a.sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time));localStorage.setItem('gavin-appts-v2',JSON.stringify(a));renderAppointments();toast('Afspraak toegevoegd');renderSummary()}
+function renderAppointments(){let a=appointments();$('alist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.date} ${x.time||''}</span><br><b>${x.type}</b> — ${x.subject||'Afspraak'}<br><span class="small">${x.note||''}${x.reminder&&x.reminder!=='Geen'?' • Herinnering: '+x.reminder:''}</span><br><button onclick="delAppointment(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen afspraken.</p>'}
+function delAppointment(id){localStorage.setItem('gavin-appts-v2',JSON.stringify(appointments().filter(x=>x.id!==id)));renderAppointments()}
+function weights(){try{return JSON.parse(localStorage.getItem('gavin-weight-v1')||'[]')}catch(e){return[]}}
+function saveWeight(){let a=weights();a.unshift({id:Date.now(),date:new Date().toISOString(),kg:$('kg').value,note:$('kgnote').value});localStorage.setItem('gavin-weight-v1',JSON.stringify(a));$('kg').value='';$('kgnote').value='';renderWeights();toast('Gewicht opgeslagen');renderSummary()}
+function renderWeights(){let a=weights();$('wlist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${new Date(x.date).toLocaleDateString('nl-NL')}</span> <b>${x.kg} kg</b><br><span class="small">${x.note||''}</span></div>`).join(''):'<p class="small">Nog geen gewichtsmetingen.</p>'}
+function saveEvening(){add('avond',{snack:$('snack').value,amount:$('snackamount').value,drink:$('drink').value,reason:$('snackreason').value,note:$('snacknote').value})}
+function dayTypes(){let k=todayKey();return new Set(get().filter(x=>todayKey(new Date(x.date))===k).map(x=>x.type))}
+function dailyStatus(){
+  let d=dayTypes(), c=complaints().some(x=>todayKey(new Date(x.date))===todayKey()), w=weights().some(x=>todayKey(new Date(x.date))===todayKey());
+  return [
+    ['team','Dag & Team / slaap & ADL','team'],
+    ['dietist','Voeding / maaltijden','food'],
+    ['fysio','Lopen / wandeltest','walk'],
+    ['ergo','Ergo / werken en plat','ergo'],
+    ['klacht','Pijn / gevoel / kracht','defects'],
+    ['medicatie','Medicatie gecontroleerd','meds'],
+    ['gewicht','Gewicht (indien vandaag meten)','weight',w],
+    ['avond','Avond / snack','evening']
+  ].map(x=>({key:x[0],label:x[1],page:x[2],done:x[3]!==undefined?x[3]:d.has(x[0])}));
+}
+function renderDailyChecklist(){
+  let rows=dailyStatus();
+  $('dailyChecklist').innerHTML=rows.map(x=>`<div class="summaryrow ${x.done?'done':''}"><span class="dot"></span><b>${x.label}</b><span class="small">${x.done?'Ingevuld':'Nog doen'}</span><button onclick="page('${x.page}')">${x.done?'Open':'Invullen'}</button></div>`).join('');
+  let missing=rows.filter(x=>!x.done);
+  $('missingList').innerHTML=missing.length?`<div class="summarywarn"><b>${missing.length} onderdeel${missing.length===1?'':'en'} nog open.</b> Rond deze af voordat je de dag afsluit.</div>`:'<div class="summaryok"><b>Alles is ingevuld.</b> Je dag kan worden afgesloten. 🎉</div>';
+}
+function finishDay(){let missing=dailyStatus().filter(x=>!x.done);if(missing.length){toast('Nog '+missing.length+' onderdeel'+(missing.length===1?'':'en')+' invullen.');page(missing[0].page);return}localStorage.setItem('gavin-day-closed-'+todayKey(),new Date().toISOString());toast('Dag compleet opgeslagen.');renderSummary()}
+function renderSummary(){
+  renderDailyChecklist();
+  let today=get().filter(x=>todayKey(new Date(x.date))===todayKey()).sort((a,b)=>b.id-a.id),cc=complaints().filter(x=>todayKey(new Date(x.date))===todayKey()).sort((a,b)=>b.id-a.id);
+  let labels={team:'Dag & Team',dietist:'Voeding',fysio:'Lopen',ergo:'Ergo',avond:'Avond'};
+  let detail=today.slice(0,8).map(x=>`<div class="entry"><span class="tag">${labels[x.type]||x.type}</span> <b>${new Date(x.date).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}</b><br><span class="small">${summaryLine(x)}</span></div>`).join('');
+  if(cc.length)detail+=cc.slice(0,4).map(x=>`<div class="entry"><span class="tag">Klacht</span> <b>${x.location}</b><br><span class="small">Pijn ${x.pain}/10${x.numb?' • geen/weinig gevoel':''}${x.weak?' • geen/weinig kracht':''}</span></div>`).join('');
+  $('summaryText').innerHTML=`<div class="summaryok"><b>${today.length+cc.length} registratie(s) vandaag.</b><br>De checklist hierboven bepaalt of de dag compleet is.</div>${detail||'<p class="small">Nog geen registraties vandaag.</p>'}`;
+  renderSavedSummaries();
+}
+function summaryLine(x){if(x.type==='fysio')return `${x.meters||x.km||0} ${x.meters?'meter':'km'} • pijn ${x.pain||0}/10 • grens: ${x.limit||'niet ingevuld'}`;if(x.type==='ergo')return `pijn ${x.pain||0}/10 • schouders: ${x.shoulders||''} • plat: ${x.flat||''}`;if(x.type==='dietist')return `Ontbijt ${x.ontbijt?'✓':'–'} • lunch ${x.lunch?'✓':'–'} • avond ${x.avond?'✓':'–'} • eiwit ${x.eiwit?'✓':'–'}`;if(x.type==='team')return `Slaap ${x.sleep||''} • energie ${x.energy||0}/10 • pijn ${x.pain||0}/10`;if(x.type==='avond')return `${x.snack||'Niets ingevuld'}${x.amount?' • '+x.amount:''}`;return 'Registratie opgeslagen.'}
+function home(){$('today').textContent=new Date().toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});renderSummary();reminderCheck()}
+function reminderCheck(){let h=new Date().getHours();if(h>=18){let missing=dailyStatus().filter(x=>!x.done);if(missing.length)toast('Dagcontrole: nog '+missing.length+' onderdeel'+(missing.length===1?'':'en')+' invullen.');}}
+async function enableNotifications(){if(!('Notification'in window)){toast('Meldingen worden niet door deze browser ondersteund.');return}let p=await Notification.requestPermission();toast(p==='granted'?'Meldingen toegestaan.':'Meldingen niet toegestaan.')}
+const SKEY='gavin-saved-summaries-v1';
+function periodRange(kind,base=new Date()){let s=new Date(base);s.setHours(0,0,0,0);let e=new Date(s);if(kind==='day'){e.setDate(e.getDate()+1)}else if(kind==='week'){let day=(s.getDay()+6)%7;s.setDate(s.getDate()-day);e=new Date(s);e.setDate(e.getDate()+7)}else{ s.setDate(1);e=new Date(s);e.setMonth(e.getMonth()+1)}return [s,e]}
+function periodLabel(kind){let [s,e]=periodRange(kind);if(kind==='day')return s.toLocaleDateString('nl-NL');if(kind==='week')return `week ${String(Math.ceil((((s-new Date(s.getFullYear(),0,1))/86400000)+1)/7)).padStart(2,'0')} (${s.toLocaleDateString('nl-NL')} t/m ${new Date(e-86400000).toLocaleDateString('nl-NL')})`;return s.toLocaleDateString('nl-NL',{month:'long',year:'numeric'})}
+function buildPeriodSummary(kind){let [s,e]=periodRange(kind),a=get().filter(x=>new Date(x.date)>=s&&new Date(x.date)<e),cc=complaints().filter(x=>new Date(x.date)>=s&&new Date(x.date)<e),we=weights().filter(x=>new Date(x.date)>=s&&new Date(x.date)<e),ap=appointments().filter(x=>{let d=new Date(x.date);return d>=s&&d<e});let title=`GAVIN – REVALIDATIESAMENVATTING\n${kind==='day'?'DAG':kind==='week'?'WEEK':'MAAND'}: ${periodLabel(kind)}\nGemaakt: ${new Date().toLocaleString('nl-NL')}\n\n`;let out=title+`Profiel: lengte 189 cm | huidig gewicht 105 kg | streefgewicht 85 kg\n\nREGISTRATIES (${a.length})\n`;a.sort((x,y)=>new Date(x.date)-new Date(y.date)).forEach(x=>{out+=`• ${new Date(x.date).toLocaleString('nl-NL')} — ${x.type}: ${summaryLine(x)}\n`});out+='\nKLACHTEN / PIJN / GEVOEL / KRACHT\n';cc.sort((x,y)=>new Date(x.date)-new Date(y.date)).forEach(x=>{out+=`• ${new Date(x.date).toLocaleString('nl-NL')} — ${x.location}: pijn ${x.pain}/10${x.numb?' — geen/weinig gevoel':''}${x.weak?' — geen/weinig kracht':''}${x.note?' — '+x.note:''}\n`});out+=`\nGEWICHTSMETINGEN (${we.length})\n`;we.sort((x,y)=>new Date(x.date)-new Date(y.date)).forEach(x=>out+=`• ${new Date(x.date).toLocaleDateString('nl-NL')} — ${x.kg} kg${x.note?' — '+x.note:''}\n`);out+=`\nAFSPRAKEN (${ap.length})\n`;ap.sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time)).forEach(x=>out+=`• ${x.date} ${x.time||''} — ${x.type} — ${x.subject||'Afspraak'}${x.note?' — '+x.note:''}\n`);return out}
+function saveSummaryPeriod(kind){let text=buildPeriodSummary(kind),a;try{a=JSON.parse(localStorage.getItem(SKEY)||'[]')}catch(e){a=[]}a.unshift({id:Date.now(),kind,label:periodLabel(kind),savedAt:new Date().toISOString(),text});localStorage.setItem(SKEY,JSON.stringify(a.slice(0,50)));renderSavedSummaries();toast(`${kind==='day'?'Dag':kind==='week'?'Week':'Maand'}samenvatting opgeslagen`)}
+function renderSavedSummaries(){let el=$('savedSummaries');if(!el)return;let a;try{a=JSON.parse(localStorage.getItem(SKEY)||'[]')}catch(e){a=[]}el.innerHTML=a.length?'<h3>Opgeslagen samenvattingen</h3>'+a.slice(0,10).map(x=>`<div class="entry"><span class="tag">${x.kind==='day'?'Dag':x.kind==='week'?'Week':'Maand'}</span> <b>${x.label}</b><br><span class="small">Opgeslagen ${new Date(x.savedAt).toLocaleString('nl-NL')}</span><br><button onclick="printSavedSummary(${x.id})">🖨️ Afdrukken</button> <button onclick="downloadSavedSummary(${x.id})">💾 Bestand</button></div>`).join(''):'<p class="small">Nog geen opgeslagen samenvattingen.</p>'}
+function printSummaryPeriod(kind){printText(buildPeriodSummary(kind),`Gavin revalidatiesamenvatting — ${periodLabel(kind)}`)}
+function printSavedSummary(id){let a=JSON.parse(localStorage.getItem(SKEY)||'[]'),x=a.find(z=>z.id===id);if(x)printText(x.text,`Gavin revalidatiesamenvatting — ${x.label}`)}
+function downloadSavedSummary(id){let a=JSON.parse(localStorage.getItem(SKEY)||'[]'),x=a.find(z=>z.id===id);if(x)dl(x.text,`Gavin_Revalidatie_${x.kind}_${String(x.id)}.txt`)}
+function printText(t,title){let w=window.open('','_blank');if(!w){toast('Afdrukvenster kon niet worden geopend');return}w.document.write('<html><head><title>'+title.replace(/</g,'&lt;')+'</title><style>body{font-family:Arial;padding:25px;white-space:pre-wrap;line-height:1.45;color:#302532}h1{color:#5a1a68}</style></head><body><h1>'+title.replace(/</g,'&lt;')+'</h1><pre>'+t.replace(/</g,'&lt;')+'</pre></body></html>');w.document.close();setTimeout(()=>w.print(),400)}
+
+function report(days){let cut=Date.now()-days*86400000,a=get().filter(x=>new Date(x.date).getTime()>=cut),cc=complaints().filter(x=>new Date(x.date).getTime()>=cut),ap=appointments(),we=weights().filter(x=>new Date(x.date).getTime()>=cut),s='GAVIN – REVALIDATIELOG\nPersoonlijk overzicht\nLengte: 189 cm | Huidig gewicht: 105 kg | Streefgewicht: 85 kg\nPeriode: laatste '+days+' dag(en)\nGemaakt: '+new Date().toLocaleString('nl-NL')+'\n\n';a.reverse().forEach(x=>{s+='------------------------------\n'+new Date(x.date).toLocaleString('nl-NL')+'\n'+x.type.toUpperCase()+'\n'+JSON.stringify(x,null,2)+'\n'});s+='\nKLACHTEN / PIJN / GEVOEL / KRACHT\n'+JSON.stringify(cc,null,2)+'\n\nAFSPRAKEN\n'+JSON.stringify(ap,null,2)+'\n\nGEWICHT\n'+JSON.stringify(we,null,2)+'\n';return s}
 async function share(days){let t=report(days),f=new File([t],`Gavin_Revalidatielog_${days}dagen.txt`,{type:'text/plain'});try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({title:'Gavin revalidatielog',files:[f]});else if(navigator.share)await navigator.share({title:'Gavin revalidatielog',text:t});else dl(t,'Gavin_Revalidatielog.txt')}catch(e){}}
 function dl(t,n){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=n;a.click()}
 function pdf(){let t=report(30),w=window.open('','_blank');if(!w){toast('Rapport kon niet worden geopend');return}w.document.write('<html><head><title>Gavin Revalidatielog</title><style>body{font-family:Arial;padding:25px;white-space:pre-wrap;line-height:1.45;color:#302532}h1{color:#5a1a68}</style></head><body><h1>Gavin – Revalidatielog</h1><pre>'+t.replace(/</g,'&lt;')+'</pre></body></html>');w.document.close();setTimeout(()=>w.print(),400)}
 
-function appointments(){try{return JSON.parse(localStorage.getItem('gavin-appts-v1')||'[]')}catch(e){return[]}}
-function addAppointment(){let a=appointments();a.push({id:Date.now(),date:$('adate').value,time:$('atime').value,type:$('atype').value,subject:$('asubject').value,note:$('anote').value});a.sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time));localStorage.setItem('gavin-appts-v1',JSON.stringify(a));renderAppointments();toast('Afspraak toegevoegd')}
-function renderAppointments(){let a=appointments(),now=new Date().toISOString().slice(0,10);$('alist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.date} ${x.time||''}</span><br><b>${x.type}</b> — ${x.subject||'Afspraak'}<br><span class="small">${x.note||''}</span><br><button onclick="delAppointment(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen afspraken.</p>'}
-function delAppointment(id){localStorage.setItem('gavin-appts-v1',JSON.stringify(appointments().filter(x=>x.id!==id)));renderAppointments()}
-function weights(){try{return JSON.parse(localStorage.getItem('gavin-weight-v1')||'[]')}catch(e){return[]}}
-function saveWeight(){let a=weights();a.unshift({id:Date.now(),date:new Date().toISOString(),kg:$('kg').value,note:$('kgnote').value});localStorage.setItem('gavin-weight-v1',JSON.stringify(a));$('kg').value='';$('kgnote').value='';renderWeights();toast('Gewicht opgeslagen')}
-function renderWeights(){let a=weights();$('wlist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${new Date(x.date).toLocaleDateString('nl-NL')}</span> <b>${x.kg} kg</b><br><span class="small">${x.note||''}</span></div>`).join(''):'<p class="small">Nog geen gewichtsmetingen.</p>'}
-function saveEvening(){add('avond',{snack:$('snack').value,amount:$('snackamount').value,drink:$('drink').value,reason:$('snackreason').value,note:$('snacknote').value})}
-
-function home(){$('today').textContent=new Date().toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
-$('adate').value=new Date().toISOString().slice(0,10);home();
+$('adate').value=new Date().toISOString().slice(0,10);seedMeds();home();restoreWalk();restoreErgo();renderSavedSummaries();
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body></html>
