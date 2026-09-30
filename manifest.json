@@ -1,0 +1,9 @@
+{
+  "name": "Gavin Revalidatie – Incomplete Dwarslaesie",
+  "short_name": "Gavin Revalidatie",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fffafd",
+  "theme_color": "#5a1a68",
+  "lang": "nl"
+}

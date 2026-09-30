@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#5a1a68">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="light-content">
+<meta name="apple-mobile-web-app-title" content="Gavin Revalidatie">
+<link rel="manifest" href="manifest.json">
+<title>Gavin • Incomplete Dwarslaesie</title>
+<style>
+:root{--p:#5a1a68;--p2:#7d2b8a;--red:#e44744;--pink:#f2dce8;--bg:#fffafd;--ink:#302532;--muted:#746976;--line:#e2d7e4;--green:#198754;--orange:#df9225}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:calc(17px + env(safe-area-inset-top)) 17px 18px;border-radius:0 0 26px 26px;box-shadow:0 6px 20px #50135d35}
+.brand{font-size:12px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;opacity:.9}.title{font-size:28px;font-weight:850;line-height:1.05}.sub{font-size:14px;margin-top:5px;opacity:.92}
+main{max-width:760px;margin:auto;padding:13px 13px calc(30px + env(safe-area-inset-bottom))}
+nav{display:flex;gap:7px;overflow:auto;padding:2px 0 12px}nav button{white-space:nowrap;background:#fff;color:var(--p);border:1px solid var(--line);border-radius:13px;padding:10px 13px;font-weight:750}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 5px 18px #5a1a6810}
+.page{display:none}.page.active{display:block}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:14px 0 7px}
+p{line-height:1.45}.small{color:var(--muted);font-size:13px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+button{font:inherit;border:0;border-radius:14px;padding:14px 11px;background:#f0e5f2;color:var(--p);font-weight:750;min-height:52px}
+button.primary{background:var(--p);color:#fff}button.green{background:var(--green);color:#fff}button.red{background:var(--red);color:#fff}button.orange{background:var(--orange);color:#fff}
+label{display:block;color:var(--muted);font-size:13px;font-weight:650;margin:11px 0 5px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d5c8d8;border-radius:11px;background:#fff;color:var(--ink);font-size:16px}
+textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
+.hero{background:var(--p);color:#fff;border-radius:20px;padding:17px;margin-bottom:12px}.hero .big{font-size:22px;font-weight:850}.hero .tiny{font-size:12px;opacity:.85;margin-top:4px}
+.tag{display:inline-block;background:var(--pink);color:var(--p);padding:4px 8px;border-radius:8px;font-size:11px;font-weight:800}
+.timer{text-align:center;font-size:42px;font-weight:850;color:var(--p);font-variant-numeric:tabular-nums;margin:12px}
+.check{display:flex;gap:9px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.check input{width:22px;height:22px;margin:0}
+.stat{font-size:27px;font-weight:850;color:var(--p)}.entry{border-top:1px solid var(--line);padding:11px 0}.entry:first-child{border-top:0}
+.notice{background:#fff3f2;border-left:4px solid var(--red);padding:11px;border-radius:10px;font-size:13px;line-height:1.45}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">Persoonlijk revalidatielogboek</div>
+<div class="title">Gavin • Revalidatie</div>
+<div class="sub">Incomplete dwarslaesie • Rijndam • iPhone</div>
+</header>
+<main>
+<nav>
+<button onclick="page('home')">Vandaag</button>
+<button onclick="page('walk')">🚶 Lopen</button>
+<button onclick="page('ergo')">🪑 Ergo</button>
+<button onclick="page('food')">🥗 Diëtist</button>
+<button onclick="page('team')">👥 Team</button>
+<button onclick="page('meds')">💊 Medicatie</button>
+<button onclick="page('agenda')">📅 Afspraken</button><button onclick="page('weight')">⚖️ Gewicht</button><button onclick="page('evening')">🍫 Avond</button><button onclick="page('share')">📤 Log</button>
+</nav>
+
+<section id="home" class="page active">
+<div class="hero">
+<div id="today"></div><div class="big">Mijn revalidatie</div>
+<div>Vandaag gericht vooruit.</div><div class="tiny">Persoonlijk hulpmiddel naast mijn behandeling</div>
+</div>
+<div class="card"><h2>Mijn revalidatieteam</h2>
+<div class="grid">
+<button onclick="page('walk')">Fysiotherapie</button>
+<button onclick="page('ergo')">Ergotherapie</button>
+<button onclick="page('food')">Diëtist</button>
+<button onclick="page('team')">Psycholoog</button>
+<button onclick="page('team')">Maatschappelijk werk</button>
+<button onclick="page('team')">Revalidatiearts</button>
+</div></div>
+<div class="card"><h2>Vandaag bijhouden</h2><div class="grid">
+<button class="primary" onclick="page('walk')">Wandeltest</button>
+<button onclick="page('ergo')">2 uur / 10 min</button>
+<button onclick="page('food')">Voeding</button>
+<button onclick="page('team')">Slaap & ADL</button>
+<button onclick="page('meds')">Tabletten</button>
+<button class="orange" onclick="page('share')">Log delen</button>
+</div></div>
+<div class="card"><h2>Over mijn situatie</h2>
+<p class="small">Profiel: Gavin • incomplete dwarslaesie na hernia-operatie. Dit scherm is alleen een persoonlijke samenvatting van de informatie die je zelf hebt ingevoerd.</p>
+</div>
+</section>
+
+<section id="walk" class="page"><div class="card"><h2>🚶 Fysio — wandeltest</h2>
+<p class="small">Meet hoe ver en hoe lang je kunt lopen voordat het lastig wordt, pijn ontstaat of het niet meer gaat. Noteer daarna de hersteltijd.</p>
+<div class="timer" id="wtimer">00:00</div>
+<div class="row"><button class="green" onclick="wsStart()">Start</button><button class="orange" onclick="wsStop()">Stop</button><button onclick="wsReset()">Reset</button></div>
+<label>Meter</label><input id="wm" type="number" min="0" step="1">
+<label>Kilometer</label><input id="wk" type="number" min="0" step=".01">
+<label>Waarom werd je grens bereikt?</label><select id="wl"><option>Het werd lastig</option><option>Pijn begon</option><option>Lopen werd niet meer goed te doen</option><option>Bewust gestopt</option><option>Geen duidelijke grens</option></select>
+<label>Pijn (0–10)</label><input id="wp" type="number" min="0" max="10" value="0">
+<label>Hersteltijd (minuten)</label><input id="wr" type="number" min="0">
+<label>Wat merkte je tijdens het herstel?</label><textarea id="wrt"></textarea>
+<button class="primary" onclick="saveWalk()">Wandeling opslaan</button></div></section>
+
+<section id="ergo" class="page"><div class="card"><h2>🪑 Ergo — 2 uur werken / 10 min plat</h2>
+<p class="small">Gebruik de timer voor het afgesproken ritme. Let tijdens het werken op je schouders en registreer wat er gebeurt als pijn ontstaat.</p>
+<div class="timer" id="etimer">02:00:00</div>
+<div class="row"><button class="green" onclick="eStart()">Start</button><button class="orange" onclick="eStop()">Stop</button><button onclick="eReset()">Reset</button></div>
+<p id="estatus" class="small">Klaar voor 2 uur.</p>
+<label>Schouders naar beneden / ontspannen</label><select id="esh"><option>Goed gelukt</option><option>Regelmatig op gelet</option><option>Moeilijk vol te houden</option></select>
+<label>Wanneer ontstond pijn?</label><input id="ewhen" placeholder="Bijv. na 50 minuten">
+<label>Pijn (0–10)</label><input id="ep" type="number" min="0" max="10" value="0">
+<label>Wat deed je toen de pijn ontstond?</label><textarea id="ewhat"></textarea>
+<label>10 minuten plat liggen gelukt?</label><select id="eflat"><option>Ja</option><option>Gedeeltelijk</option><option>Nee</option></select>
+<label>Opmerking</label><textarea id="enote"></textarea>
+<button class="primary" onclick="saveErgo()">Ergo opslaan</button></div>
+<div class="card"><h2>⏰ Nu 10 minuten plat</h2><div class="timer" id="ft">10:00</div><button class="primary" onclick="flatStart()">Start 10 minuten</button> <button onclick="flatStop()">Stop</button></div>
+</section>
+
+<section id="food" class="page"><div class="card"><h2>🥗 Diëtist — dagcheck</h2>
+<p class="small">Doel uit je voedingsafspraak: een volwaardig en regelmatig patroon met minimaal 3 hoofdmaaltijden.</p>
+<label class="check"><input id="b" type="checkbox"><span><b>Ontbijt</b><br>Bijvoorbeeld 200 g 2% Griekse yoghurt of halfvolle naturel kwark + 3 eetlepels muesli/cruesli.</span></label>
+<label class="check"><input id="l" type="checkbox"><span><b>Lunch</b><br>3 volkoren boterhammen / 2 broodjes met beleg zoals kaas, kipfilet, pindakaas, rookvlees, fricandeau of ei; eventueel zuivel.</span></label>
+<label class="check"><input id="d" type="checkbox"><span><b>Avondmaaltijd</b><br>Ongeveer 200 g rijst/pasta/aardappel + 200 g groenten + 100 g vlees/vis/kip.</span></label>
+<label class="check"><input id="z" type="checkbox"><span><b>Extra zuivel/eiwit</b><br>Indien passend binnen de afspraak met de diëtist.</span></label>
+<label>Wat ging goed / moeilijk?</label><textarea id="fn"></textarea>
+<button class="primary" onclick="saveFood()">Voeding opslaan</button></div></section>
+
+<section id="team" class="page"><div class="card"><h2>👥 Dagelijks functioneren & behandelteam</h2>
+<label>Slaap</label><select id="sl"><option>Goed</option><option>Redelijk</option><option>Slecht</option></select>
+<label>Hoe ging het opstaan?</label><textarea id="rise"></textarea>
+<label>Aankleden</label><select id="dress"><option>Zelfstandig</option><option>Gedeeltelijk zelf</option><option>Met hulp</option><option>Niet gelukt</option></select>
+<label>Waarbij kreeg je hulp?</label><input id="help">
+<label>Energie (0–10)</label><input id="energy" type="number" min="0" max="10" value="5">
+<label>Pijn / ongemak (0–10)</label><input id="pain" type="number" min="0" max="10" value="0">
+<label>Waar liep je tegenaan?</label><textarea id="ob"></textarea>
+<label>Wat ging beter?</label><textarea id="better"></textarea>
+<label>Wat wil je bespreken met psycholoog / maatschappelijk werk / arts?</label><textarea id="teamnote"></textarea>
+<button class="primary" onclick="saveTeam()">Dagregistratie opslaan</button></div></section>
+
+<section id="meds" class="page"><div class="card"><h2>💊 Tabletten</h2>
+<p class="small">Alleen een herinneringslijst. De app bepaalt geen dosering en verandert geen voorschrift.</p>
+<label>Naam</label><input id="mn">
+<label>Tijd</label><input id="mt" type="time">
+<label>Opmerking</label><input id="mo">
+<button class="primary" onclick="addMed()">Toevoegen</button></div>
+<div class="card"><h2>Mijn tijden</h2><div id="ml"></div></div></section>
+
+
+<section id="agenda" class="page"><div class="card"><h2>📅 Afsprakenagenda</h2>
+<p class="small">Een eenvoudig overzicht van je afspraken voor je revalidatietraject.</p>
+<label>Datum</label><input id="adate" type="date">
+<label>Tijd</label><input id="atime" type="time">
+<label>Behandelaar / discipline</label><select id="atype"><option>Fysiotherapie</option><option>Ergotherapie</option><option>Diëtist</option><option>Psycholoog</option><option>Maatschappelijk werk</option><option>Revalidatiearts</option><option>Verpleegkundige</option><option>Andere afspraak</option></select>
+<label>Onderwerp</label><input id="asubject" placeholder="Bijv. voortgang / controle / behandeling">
+<label>Opmerking</label><textarea id="anote"></textarea>
+<button class="primary" onclick="addAppointment()">Afspraak toevoegen</button>
+</div>
+<div class="card"><h2>Mijn afspraken</h2><div id="alist"></div></div></section>
+
+<section id="weight" class="page"><div class="card"><h2>⚖️ Gewicht</h2>
+<p class="small">Registreer je gewicht wanneer je dat met je behandelteam hebt afgesproken. De app geeft geen oordeel over je gewicht.</p>
+<label>Gewicht (kg)</label><input id="kg" type="number" min="0" step=".1" placeholder="bijv. 82.4">
+<label>Opmerking</label><textarea id="kgnote"></textarea>
+<button class="primary" onclick="saveWeight()">Gewicht opslaan</button>
+</div>
+<div class="card"><h2>Gewichtslog</h2><div id="wlist"></div></div></section>
+
+<section id="evening" class="page"><div class="card"><h2>🍫 Wat snoepte je vanavond?</h2>
+<p class="small">Gewoon eerlijk bijhouden, zonder oordeel. Dit kan handig zijn om samen met de diëtist naar je eetpatroon te kijken.</p>
+<label>Wat heb je gegeten?</label><input id="snack" placeholder="Bijv. chips, chocolade, koek, ijs">
+<label>Ongeveer hoeveel?</label><input id="snackamount" placeholder="Bijv. 2 koekjes / klein bakje">
+<label>Wat heb je gedronken?</label><input id="drink" placeholder="Bijv. water, frisdrank, thee">
+<label>Waarom / moment?</label><select id="snackreason"><option>Gewoon trek</option><option>Gezelligheid</option><option>Stress / spanning</option><option>Verveling</option><option>Na het eten</option><option>Anders</option></select>
+<label>Opmerking</label><textarea id="snacknote"></textarea>
+<button class="primary" onclick="saveEvening()">Avondregistratie opslaan</button>
+</div></section>
+
+<section id="share" class="page"><div class="card"><h2>📤 Revalidatielog delen</h2>
+<p class="small">Maak een overzicht van je registraties. Op de iPhone kun je het bestand via het deelmenu naar WhatsApp, Mail of Bestanden sturen.</p>
+<div class="grid"><button onclick="share(1)">Vandaag</button><button onclick="share(7)">7 dagen</button><button onclick="share(14)">14 dagen</button><button onclick="share(30)">30 dagen</button></div>
+<br><button class="primary" onclick="pdf()">PDF maken</button>
+<p class="small">De PDF-weergave kan via de iPhone als PDF worden opgeslagen en daarna gedeeld.</p>
+</div>
+<div class="card"><h2>Privacy</h2><div class="notice">Dit is een persoonlijk hulpmiddel en geen officieel Rijndam-systeem. Zet geen informatie in de app die je niet op je eigen telefoon wilt bewaren of delen.</div></div></section>
+</main>
+<div id="toast" style="position:fixed;left:14px;right:14px;bottom:18px;background:#32103b;color:#fff;padding:13px;border-radius:13px;text-align:center;display:none"></div>
+<script>
+const KEY='gavin-incomplete-dwarslaesie-v3',MKEY='gavin-meds-v3',$=id=>document.getElementById(id);
+const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}},put=a=>localStorage.setItem(KEY,JSON.stringify(a));
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('page','active');if(id==='home')home();if(id==='meds')renderMeds();if(id==='agenda')renderAppointments();if(id==='weight')renderWeights();scrollTo(0,0)}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',1800)}
+function add(type,obj){let a=get();a.unshift({id:Date.now(),date:new Date().toISOString(),type,...obj});put(a);toast('Opgeslagen');home()}
+let ws=0,wi=null;function wf(s){return [Math.floor(s/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')}
+function wsStart(){if(wi)return;let st=Date.now()-ws*1000;wi=setInterval(()=>{ws=Math.floor((Date.now()-st)/1000);$('wtimer').textContent=wf(ws)},300)}
+function wsStop(){clearInterval(wi);wi=null}function wsReset(){wsStop();ws=0;$('wtimer').textContent='00:00'}
+function saveWalk(){add('fysio',{seconds:ws,meters:$('wm').value,km:$('wk').value,limit:$('wl').value,pain:$('wp').value,recovery:$('wr').value,recoveryNote:$('wrt').value});wsReset()}
+let er=7200,ei=null;function ef(s){let h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return[h,m,x].map(v=>String(v).padStart(2,'0')).join(':')}
+function eStart(){if(ei)return;let st=Date.now()-(7200-er)*1000;ei=setInterval(()=>{er=Math.max(0,7200-Math.floor((Date.now()-st)/1000));$('etimer').textContent=ef(er);if(er===0){eStop();$('estatus').textContent='2 uur voorbij — tijd voor 10 minuten platliggen.';flatStart()}},500);$('estatus').textContent='2 uur loopt.'}
+function eStop(){clearInterval(ei);ei=null}function eReset(){eStop();er=7200;$('etimer').textContent=ef(er);$('estatus').textContent='Klaar voor 2 uur.'}
+function saveErgo(){add('ergo',{shoulders:$('esh').value,when:$('ewhen').value,pain:$('ep').value,action:$('ewhat').value,flat:$('eflat').value,note:$('enote').value})}
+let fs=600,fi=null;function flatStart(){clearInterval(fi);fs=600;$('ft').textContent=ef(fs);fi=setInterval(()=>{fs--;if(fs<=0){fs=0;clearInterval(fi);toast('10 minuten platliggen voorbij.')}$('ft').textContent=ef(fs)},1000)}function flatStop(){clearInterval(fi);fi=null}
+function saveFood(){add('dietist',{ontbijt:$('b').checked,lunch:$('l').checked,avond:$('d').checked,eiwit:$('z').checked,note:$('fn').value})}
+function saveTeam(){add('team',{sleep:$('sl').value,rise:$('rise').value,dress:$('dress').value,help:$('help').value,energy:$('energy').value,pain:$('pain').value,obstacles:$('ob').value,better:$('better').value,team:$('teamnote').value})}
+function meds(){try{return JSON.parse(localStorage.getItem(MKEY)||'[]')}catch(e){return[]}}
+function addMed(){let a=meds();a.push({id:Date.now(),name:$('mn').value,time:$('mt').value,note:$('mo').value});localStorage.setItem(MKEY,JSON.stringify(a));$('mn').value='';$('mo').value='';renderMeds();toast('Tablet toegevoegd')}
+function renderMeds(){let a=meds().sort((x,y)=>x.time.localeCompare(y.time));$('ml').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.time}</span> <b>${x.name}</b><br><span class="small">${x.note||''}</span><br><button onclick="delMed(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen tabletten.</p>'}
+function delMed(id){localStorage.setItem(MKEY,JSON.stringify(meds().filter(x=>x.id!==id)));renderMeds()}
+function report(days){let cut=Date.now()-days*86400000,a=get().filter(x=>new Date(x.date).getTime()>=cut),ap=appointments(),we=weights().filter(x=>new Date(x.date).getTime()>=cut),s='GAVIN – REVALIDATIELOG\\nIncomplete dwarslaesie • persoonlijk overzicht\\nPeriode: laatste '+days+' dag(en)\\nGemaakt: '+new Date().toLocaleString('nl-NL')+'\\n\\n';a.reverse().forEach(x=>{s+='------------------------------\\n'+new Date(x.date).toLocaleString('nl-NL')+'\\n'+x.type.toUpperCase()+'\\n'+JSON.stringify(x,null,2)+'\\n'});return s}
+async function share(days){let t=report(days),f=new File([t],`Gavin_Revalidatielog_${days}dagen.txt`,{type:'text/plain'});try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({title:'Gavin revalidatielog',files:[f]});else if(navigator.share)await navigator.share({title:'Gavin revalidatielog',text:t});else dl(t,'Gavin_Revalidatielog.txt')}catch(e){}}
+function dl(t,n){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=n;a.click()}
+function pdf(){let t=report(30),w=window.open('','_blank');if(!w){toast('Rapport kon niet worden geopend');return}w.document.write('<html><head><title>Gavin Revalidatielog</title><style>body{font-family:Arial;padding:25px;white-space:pre-wrap;line-height:1.45;color:#302532}h1{color:#5a1a68}</style></head><body><h1>Gavin – Revalidatielog</h1><pre>'+t.replace(/</g,'&lt;')+'</pre></body></html>');w.document.close();setTimeout(()=>w.print(),400)}
+
+function appointments(){try{return JSON.parse(localStorage.getItem('gavin-appts-v1')||'[]')}catch(e){return[]}}
+function addAppointment(){let a=appointments();a.push({id:Date.now(),date:$('adate').value,time:$('atime').value,type:$('atype').value,subject:$('asubject').value,note:$('anote').value});a.sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time));localStorage.setItem('gavin-appts-v1',JSON.stringify(a));renderAppointments();toast('Afspraak toegevoegd')}
+function renderAppointments(){let a=appointments(),now=new Date().toISOString().slice(0,10);$('alist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.date} ${x.time||''}</span><br><b>${x.type}</b> — ${x.subject||'Afspraak'}<br><span class="small">${x.note||''}</span><br><button onclick="delAppointment(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen afspraken.</p>'}
+function delAppointment(id){localStorage.setItem('gavin-appts-v1',JSON.stringify(appointments().filter(x=>x.id!==id)));renderAppointments()}
+function weights(){try{return JSON.parse(localStorage.getItem('gavin-weight-v1')||'[]')}catch(e){return[]}}
+function saveWeight(){let a=weights();a.unshift({id:Date.now(),date:new Date().toISOString(),kg:$('kg').value,note:$('kgnote').value});localStorage.setItem('gavin-weight-v1',JSON.stringify(a));$('kg').value='';$('kgnote').value='';renderWeights();toast('Gewicht opgeslagen')}
+function renderWeights(){let a=weights();$('wlist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${new Date(x.date).toLocaleDateString('nl-NL')}</span> <b>${x.kg} kg</b><br><span class="small">${x.note||''}</span></div>`).join(''):'<p class="small">Nog geen gewichtsmetingen.</p>'}
+function saveEvening(){add('avond',{snack:$('snack').value,amount:$('snackamount').value,drink:$('drink').value,reason:$('snackreason').value,note:$('snacknote').value})}
+
+function home(){$('today').textContent=new Date().toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+$('adate').value=new Date().toISOString().slice(0,10);home();
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body></html>
