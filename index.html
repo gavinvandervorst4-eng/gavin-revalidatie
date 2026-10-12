@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#5a1a68">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="light-content">
+<meta name="apple-mobile-web-app-title" content="Gavin Revalidatie">
+<link rel="manifest" href="manifest.json">
+<title>Gavin Revalidatie</title>
+<style>
+:root{--p:#5a1a68;--p2:#7d2b8a;--red:#e44744;--pink:#f2dce8;--bg:#fffafd;--ink:#302532;--muted:#746976;--line:#e2d7e4;--green:#198754;--orange:#df9225}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:calc(17px + env(safe-area-inset-top)) 17px 18px;border-radius:0 0 26px 26px;box-shadow:0 6px 20px #50135d35}
+.brand{font-size:12px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;opacity:.9}.title{font-size:28px;font-weight:850;line-height:1.05}.sub{font-size:14px;margin-top:5px;opacity:.92}
+main{max-width:760px;margin:auto;padding:13px 13px calc(30px + env(safe-area-inset-bottom))}.quicknav{max-width:760px;margin:10px auto 0;padding:0 13px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.quicknav button{min-height:56px;padding:10px 7px;font-size:15px}
+nav{display:flex;gap:7px;overflow:auto;padding:2px 0 12px;scrollbar-width:thin}nav button{white-space:nowrap;background:#fff;color:var(--p);border:1px solid var(--line);border-radius:13px;padding:10px 13px;font-weight:750;flex:0 0 auto}
+.record-date-card summary{list-style:none}.record-date-card summary::-webkit-details-marker{display:none}.card h2{line-height:1.25}.card>button.primary{width:100%;margin-top:10px}.fieldhint{font-size:12px;color:var(--muted);margin-top:5px}.section-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.section-actions button{min-height:48px}.log-preview{white-space:pre-wrap;background:#faf6fb;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;line-height:1.5;max-height:360px;overflow:auto}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 5px 18px #5a1a6810}
+.page{display:none}.page.active{display:block}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:14px 0 7px}
+p{line-height:1.45}.small{color:var(--muted);font-size:13px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+button{font:inherit;border:0;border-radius:14px;padding:15px 12px;background:#f0e5f2;color:var(--p);font-weight:800;min-height:58px}
+button.primary{background:var(--p);color:#fff}button.green{background:var(--green);color:#fff}button.red{background:var(--red);color:#fff}button.orange{background:var(--orange);color:#fff}
+label{display:block;color:var(--muted);font-size:13px;font-weight:650;margin:11px 0 5px}
+.section-date{background:#faf6fb;border:1px solid var(--line);border-radius:13px;padding:10px;margin:12px 0 16px}.section-date .row{align-items:center}.section-date .row input{min-width:0;flex:1}.section-date .row button{flex:0 0 auto;min-height:48px;padding:10px 12px}.section-date .small{margin-top:5px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d5c8d8;border-radius:11px;background:#fff;color:var(--ink);font-size:16px}
+textarea{min-height:80px}.row{display:flex;gap:8px}.row>*{flex:1}
+.hero{background:var(--p);color:#fff;border-radius:20px;padding:17px;margin-bottom:12px}.hero .big{font-size:22px;font-weight:850}.hero .tiny{font-size:12px;opacity:.85;margin-top:4px}
+.tag{display:inline-block;background:var(--pink);color:var(--p);padding:4px 8px;border-radius:8px;font-size:11px;font-weight:800}
+.timer{text-align:center;font-size:42px;font-weight:850;color:var(--p);font-variant-numeric:tabular-nums;margin:12px}
+.check{display:flex;gap:9px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.check input{width:22px;height:22px;margin:0}
+.stat{font-size:27px;font-weight:850;color:var(--p)}.entry{border-top:1px solid var(--line);padding:11px 0}.entry:first-child{border-top:0}
+.notice{background:#fff3f2;border-left:4px solid var(--red);padding:11px;border-radius:10px;font-size:13px;line-height:1.45}
+.hidden{display:none!important}.summaryok{background:#eef8f2;border-left:4px solid var(--green);padding:11px;border-radius:10px;font-size:13px}.summarywarn{background:#fff5e7;border-left:4px solid var(--orange);padding:11px;border-radius:10px;font-size:13px}.profilegrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.profileitem{background:#faf6fb;border-radius:12px;padding:10px}.profileitem b{display:block;color:var(--p)}.symgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.symbox{background:#faf6fb;border:1px solid var(--line);border-radius:12px;padding:10px}.symbox b{display:block;color:var(--p);margin-bottom:6px}.symcheck{display:flex;gap:7px;align-items:center;font-size:13px;margin:6px 0;color:var(--ink)}.symcheck input{width:20px;height:20px;margin:0}.chartwrap{overflow:hidden}.legendline{font-size:12px;color:var(--muted)}
+@media(max-width:600px){
+  .quicknav{display:none}
+  body{font-size:16px}.title{font-size:25px}main{padding:10px 10px 100px}.card{border-radius:18px;padding:14px;margin-bottom:10px}.grid{grid-template-columns:1fr 1fr;gap:8px}button{min-height:56px;padding:14px 10px;font-size:15px}input,select,textarea{font-size:17px;padding:13px}.timer{font-size:38px}.profilegrid,.symgrid{grid-template-columns:1fr 1fr}nav{padding-bottom:10px;scroll-snap-type:x proximity}nav button{font-size:14px;padding:11px 12px;scroll-snap-align:start}.section-actions{grid-template-columns:1fr}.record-date-card{padding:12px}.record-date-card h2{font-size:17px;margin-bottom:6px}.record-date-card p{margin:5px 0}.log-preview{font-size:12px;max-height:300px}
+  .iphonebar{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:1000;background:#fff;border:1px solid var(--line);box-shadow:0 8px 28px #32103b25;border-radius:18px;padding:7px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.iphonebar button{min-height:48px;padding:7px 4px;font-size:12px;border-radius:12px}.iphonebar .activeq{background:var(--p);color:#fff}
+  .summarycheck{display:grid;grid-template-columns:1fr;gap:7px}.summaryrow{display:flex;align-items:center;gap:9px;background:#faf6fb;border-radius:13px;padding:11px}.summaryrow .dot{width:12px;height:12px;border-radius:50%;background:var(--orange);flex:0 0 auto}.summaryrow.done .dot{background:var(--green)}.summaryrow b{flex:1}.summaryrow button{min-height:42px;padding:9px 10px}
+}
+@media(min-width:601px){.iphonebar{display:none}}
+/* Eenvoudige telefoonweergave: grote knoppen, duidelijke volgorde, geen horizontale menu-rij */
+header{padding:calc(20px + env(safe-area-inset-top)) 18px 22px;border-radius:0 0 22px 22px;box-shadow:none}
+.title{font-size:clamp(27px,7vw,34px);line-height:1.12;margin-top:4px}.sub{font-size:15px;line-height:1.4}
+main{max-width:720px;padding:12px 12px calc(100px + env(safe-area-inset-bottom))}
+.hero{padding:19px;border-radius:18px}.hero .big{font-size:25px;line-height:1.2}.hero .tiny{font-size:14px}
+.card{padding:16px;border-radius:17px;box-shadow:0 2px 8px #32103b0b;border-color:#e8dfea}
+.card h2{font-size:20px;margin-bottom:12px}
+.grid{grid-template-columns:1fr;gap:10px}
+#home .grid button{display:flex;align-items:center;text-align:left;gap:10px;min-height:68px;padding:16px;font-size:17px;border:1px solid var(--line);background:#fff;color:var(--p);border-radius:15px}
+#home .grid button.primary{background:var(--p);color:#fff;border-color:var(--p)}
+button{min-height:58px;font-size:16px;border-radius:14px;padding:15px}
+input,select,textarea{min-height:48px;font-size:17px;border-radius:12px}
+label{font-size:14px;color:#504454}
+.section-date{padding:13px}.section-date .row{align-items:stretch}.section-date .row input{min-width:0}
+.section-date .row button{font-size:14px;min-width:104px}
+nav{display:none}
+.quicknav{display:none}
+.iphonebar{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));padding:7px;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;border-radius:16px}
+.iphonebar button{min-height:55px;font-size:13px;line-height:1.2;padding:7px 2px;white-space:normal}
+.row{gap:8px}.row>*{min-width:0}
+.section-actions{grid-template-columns:1fr;gap:9px}.section-actions button{min-height:56px;font-size:16px}
+.log-preview{font-size:14px;line-height:1.55;max-height:none;overflow-wrap:anywhere}
+@media(min-width:600px){#home .grid{grid-template-columns:1fr 1fr}main{padding-bottom:35px}}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">Persoonlijk revalidatielogboek</div>
+<div class="title">Gavin • Revalidatie</div>
+<div class="sub">Incomplete dwarslaesie • Rijndam • iPhone</div>
+</header>
+<div class="quicknav"><button onclick="page('home')">🏠 Menu</button><button onclick="page('walk')">🚶 Fysio</button><button onclick="page('ergo')">🪑 Ergo</button><button onclick="page('share')">📄 Logs</button></div>
+<main>
+
+
+<section id="home" class="page active">
+<div class="hero">
+<div id="today"></div><div class="big">Mijn revalidatie</div>
+<div>Kies hieronder wat je wilt invullen.</div><div class="tiny">Tik op één grote knop om te beginnen.</div>
+</div>
+<div class="card"><h2>Wat wil je bijhouden?</h2><p class="small">Kies één onderdeel. Je kunt daarna de datum instellen en opslaan.</p><div class="grid">
+<button onclick="page('walk')">🚶 Fysiotherapie</button><button onclick="page('ergo')">🪑 Ergotherapie</button>
+<button onclick="page('food')">🥗 Voeding</button><button onclick="page('team')">👥 Dag & team</button>
+<button onclick="page('defects')">🩹 Pijn / klachten</button><button onclick="page('weight')">⚖️ Gewicht</button>
+<button onclick="page('meds')">💊 Medicatie</button><button onclick="page('agenda')">📅 Afspraken</button>
+<button onclick="page('evening')">🍫 Avondregistratie</button><button onclick="page('summary')">📋 Dagoverzicht</button>
+<button class="primary" onclick="page('share')">📄 Logs maken / versturen</button>
+</div></div>
+
+<div class="card"><h2>Over mijn situatie</h2>
+<p class="small">Profiel: Gavin • incomplete dwarslaesie na hernia-operatie. Dit scherm is alleen een persoonlijke samenvatting van de informatie die je zelf hebt ingevoerd.</p>
+</div>
+</section>
+
+<section id="summary" class="page"><div class="card"><h2>📋 Mijn dag afronden</h2><p class="small">Het doel is simpel: <b>aan het einde van de dag alles invullen.</b> Groen = ingevuld. Oranje = nog doen. Tik op een ontbrekend onderdeel om er direct naartoe te gaan.</p><div id="dailyChecklist" class="summarycheck"></div><div id="summaryText" style="margin-top:10px"></div><div id="missingList" style="margin-top:10px"></div><button class="primary" style="width:100%;margin-top:10px" onclick="finishDay()">✅ Dag compleet / afsluiten</button><button style="width:100%;margin-top:8px" onclick="enableNotifications()">🔔 Herinneringen toestaan</button></div><div class="card"><h2>Mijn profiel</h2><div class="profilegrid"><div class="profileitem"><b>Lengte</b>189 cm</div><div class="profileitem"><b>Huidig gewicht</b>105 kg</div><div class="profileitem"><b>Streefgewicht</b>85 kg</div><div class="profileitem"><b>Verschil</b>20 kg</div></div><p class="small" style="margin-bottom:0">Gewicht is een registratiewaarde; bespreek doelen en veranderingen met je behandelteam.</p></div><div class="card"><h2>Mijn contactgegevens</h2><div class="profilegrid"><div class="profileitem"><b>E-mail</b>Gavinvdv73@hotmail.com</div><div class="profileitem"><b>Telefoon</b>0645722004</div></div></div><div class="card"><h2>🔔 Dagherinnering</h2><p class="small">Bij het openen controleert de app automatisch of je dag compleet is. Vanaf 18:00 wordt extra aandacht gevraagd voor ontbrekende onderdelen. Een echte iPhone-melding terwijl de app volledig gesloten is vraagt een apart push-meldingssysteem.</p></div></section>
+
+<section id="walk" class="page"><div class="card"><h2>🚶 Fysio — wandeltest</h2>
+<div class="section-date"><label for="date-fysio">Datum van registratie</label><div class="row"><input id="date-fysio" type="date"><button type="button" onclick="setSectionDateToday('date-fysio')">📅 Vandaag</button></div><div class="small">Kies een eerdere datum als je dit achteraf invoert.</div></div>
+<p class="small">Meet hoe ver en hoe lang je kunt lopen voordat het lastig wordt, pijn ontstaat of het niet meer gaat. Noteer daarna de hersteltijd.</p>
+<div class="timer" id="wtimer">00:00</div>
+<div class="row"><button class="green" onclick="wsStart()">Start</button><button class="orange" onclick="wsStop()">Stop</button><button onclick="wsReset()">Reset</button></div>
+<label>Meter</label><input id="wm" type="number" min="0" step="1">
+<label>Kilometer</label><input id="wk" type="number" min="0" step=".01">
+<label>Waarom werd je grens bereikt?</label><select id="wl"><option>Het werd lastig</option><option>Pijn begon</option><option>Lopen werd niet meer goed te doen</option><option>Bewust gestopt</option><option>Geen duidelijke grens</option></select>
+<label>Waar heb je pijn?</label><input id="wPainLocation" type="text" placeholder="Bijv. onderrug, billen, rechterbeen of meerdere plekken">
+<label>Pijn (0–10)</label><input id="wp" type="number" min="0" max="10" value="0">
+<label>Hersteltijd (minuten)</label><input id="wr" type="number" min="0">
+<label>Wat merkte je tijdens het herstel?</label><textarea id="wrt"></textarea>
+<button class="primary" onclick="saveWalk()">Wandeling opslaan</button><div class="section-actions"><button onclick="openCategoryLog('fysio')">📄 Fysio-log uitdraaien</button><button onclick="page('share')">Alle logopties</button></div></div></section>
+
+<section id="ergo" class="page"><div class="card"><h2>🪑 Ergo — 2 uur werken / 10 min plat</h2>
+<div class="section-date"><label for="date-ergo">Datum van registratie</label><div class="row"><input id="date-ergo" type="date"><button type="button" onclick="setSectionDateToday('date-ergo')">📅 Vandaag</button></div><div class="small">Kies een eerdere datum als je dit achteraf invoert.</div></div>
+<p class="small">De cyclus loopt automatisch door: <b>2 uur werken → 10 minuten plat → opnieuw 2 uur</b>. Laat de app open als je wilt dat de timer actief blijft. Bij elke overgang geeft de app een geluid.</p>
+<div class="timer" id="etimer">02:00:00</div><div id="ecycle" class="tag">2 uur werken</div>
+<div class="row"><button class="green" onclick="eStart()">Start</button><button class="orange" onclick="eStop()">Stop</button><button onclick="eReset()">Reset</button></div>
+<p id="estatus" class="small">Klaar voor 2 uur.</p>
+<label>Schouders naar beneden / ontspannen</label><select id="esh"><option>Goed gelukt</option><option>Regelmatig op gelet</option><option>Moeilijk vol te houden</option></select>
+<label>Wanneer ontstond pijn?</label><input id="ewhen" placeholder="Bijv. na 50 minuten">
+<label>Pijn (0–10)</label><input id="ep" type="number" min="0" max="10" value="0">
+<label>Wat deed je toen de pijn ontstond?</label><textarea id="ewhat"></textarea>
+<label>10 minuten plat liggen gelukt?</label><select id="eflat"><option>Ja</option><option>Gedeeltelijk</option><option>Nee</option></select>
+<label>Opmerking</label><textarea id="enote"></textarea>
+<button class="primary" onclick="saveErgo()">Ergo opslaan</button><div class="section-actions"><button onclick="openCategoryLog('ergo')">📄 Ergo-log uitdraaien</button><button onclick="page('share')">Alle logopties</button></div></div>
+<div class="card"><h2>⏰ Nu 10 minuten plat</h2><div class="timer" id="ft">10:00</div><button class="primary" onclick="flatStart()">Start 10 minuten</button> <button onclick="flatStop()">Stop</button></div>
+</section>
+
+<section id="food" class="page"><div class="card"><h2>🥗 Diëtist — dagcheck</h2>
+<div class="section-date"><label for="date-dietist">Datum van registratie</label><div class="row"><input id="date-dietist" type="date"><button type="button" onclick="setSectionDateToday('date-dietist')">📅 Vandaag</button></div><div class="small">Kies een eerdere datum als je dit achteraf invoert.</div></div>
+<p class="small">Doel uit je voedingsafspraak: een volwaardig en regelmatig patroon met minimaal 3 hoofdmaaltijden.</p>
+<label class="check"><input id="b" type="checkbox"><span><b>Ontbijt</b><br>Bijvoorbeeld 200 g 2% Griekse yoghurt of halfvolle naturel kwark + 3 eetlepels muesli/cruesli.</span></label>
+<label class="check"><input id="l" type="checkbox"><span><b>Lunch</b><br>3 volkoren boterhammen / 2 broodjes met beleg zoals kaas, kipfilet, pindakaas, rookvlees, fricandeau of ei; eventueel zuivel.</span></label>
+<label class="check"><input id="d" type="checkbox"><span><b>Avondmaaltijd</b><br>Ongeveer 200 g rijst/pasta/aardappel + 200 g groenten + 100 g vlees/vis/kip.</span></label>
+<label class="check"><input id="z" type="checkbox"><span><b>Extra zuivel/eiwit</b><br>Indien passend binnen de afspraak met de diëtist.</span></label>
+<label>Wat ging goed / moeilijk?</label><textarea id="fn"></textarea>
+<button class="primary" onclick="saveFood()">Voeding opslaan</button></div></section>
+
+<section id="team" class="page"><div class="card"><h2>👥 Dag & Team</h2>
+<div class="section-date"><label for="date-team">Datum van registratie</label><div class="row"><input id="date-team" type="date"><button type="button" onclick="setSectionDateToday('date-team')">📅 Vandaag</button></div><div class="small">Kies een eerdere datum als je dit achteraf invoert.</div></div><p class="small"><b>Wat betekent Team?</b> Hier leg je dagelijks vast hoe het met je gaat en wat je wilt bespreken met je revalidatieteam, zoals fysiotherapeut, ergotherapeut, diëtist, psycholoog, maatschappelijk werk en revalidatiearts.</p>
+<label>Slaap</label><select id="sl"><option>Goed</option><option>Redelijk</option><option>Slecht</option></select>
+<label>Hoe ging het opstaan?</label><textarea id="rise"></textarea>
+<label>Aankleden</label><select id="dress"><option>Zelfstandig</option><option>Gedeeltelijk zelf</option><option>Met hulp</option><option>Niet gelukt</option></select>
+<label>Waarbij kreeg je hulp?</label><input id="help">
+<label>Energie (0–10)</label><input id="energy" type="number" min="0" max="10" value="5">
+<label>Pijn / ongemak (0–10)</label><input id="pain" type="number" min="0" max="10" value="0">
+<label>Waar liep je tegenaan?</label><textarea id="ob"></textarea>
+<label>Wat ging beter?</label><textarea id="better"></textarea>
+<label>Wat wil je bespreken met psycholoog / maatschappelijk werk / arts?</label><textarea id="teamnote"></textarea>
+<button class="primary" onclick="saveTeam()">Dagregistratie opslaan</button></div></section>
+
+<section id="defects" class="page"><div class="card"><h2>🩹 Klachten, gevoel & kracht</h2>
+<p class="small">Hier houd je bij <b>wat je waar merkt</b>: pijn, minder/geen gevoel en minder/geen kracht. De app is een registratiemiddel; bespreek veranderingen of nieuwe klachten met je behandelteam.</p>
+<div class="notice"><b>Beginsituatie die je zelf hebt opgegeven</b><br>Geen gevoel: benen, billen en onderrug. Geen kracht: rechterbeen en linkerpols. Je kunt deze uitgangssituatie hieronder aanpassen als je situatie verandert.</div>
+<h3>Mijn uitgangssituatie</h3>
+<div id="baselineGrid"></div>
+<button class="primary" onclick="saveBaseline()">Uitgangssituatie opslaan</button></div>
+<div class="card"><h2>📍 Dagelijkse meting</h2>
+<div class="section-date"><label for="date-klacht">Datum van registratie</label><div class="row"><input id="date-klacht" type="date"><button type="button" onclick="setSectionDateToday('date-klacht')">📅 Vandaag</button></div><div class="small">Kies een eerdere datum als je dit achteraf invoert.</div></div>
+<label>Locatie</label><select id="cloc"></select>
+<label>Pijn op deze locatie (0–10)</label><input id="cpain" type="number" min="0" max="10" value="0">
+<label class="check"><input id="cnumb" type="checkbox"><span><b>Geen / veel minder gevoel</b></span></label>
+<label class="check"><input id="cweak" type="checkbox"><span><b>Geen / veel minder kracht</b></span></label>
+<label>Wat merk je precies?</label><textarea id="cnote" placeholder="Bijv. tintelingen, doof gevoel, pijn bij lopen, kracht minder dan gisteren..." ></textarea>
+<button class="primary" onclick="saveComplaint()">Meting opslaan</button></div>
+<div class="card"><h2>📈 Pijnontwikkeling</h2>
+<p class="small">Kies een locatie. De grafiek laat je opgeslagen pijnmetingen voor die locatie zien, zodat je veranderingen over meerdere metingen kunt volgen.</p>
+<label>Locatie voor grafiek</label><select id="chartloc" onchange="renderPainChart()"></select>
+<canvas id="painChart" height="240" style="width:100%;display:block;border:1px solid var(--line);border-radius:14px;background:#fff"></canvas>
+<div id="painStats" class="small" style="margin-top:9px"></div>
+<div id="complaintList"></div></div></section>
+
+<section id="meds" class="page"><div class="card"><h2>💊 Medicatie</h2>
+<p class="small">Herinneringslijst op basis van wat je zelf hebt opgegeven. Controleer tijden en doseringen altijd met je voorschrift/apotheek. De app verandert geen medicatie.</p>
+<div class="notice">Je hebt opgegeven: Pregabaline 150 mg 2×/dag; oxycodon langwerkend 2×/dag; paracetamol 1000 mg 2×/dag; macrogol 1×/dag; kortwerkende morfine zo nodig, maximaal 1×/dag. De app neemt dit alleen over als registratielijst.</div>
+<label>Naam + dosering</label><input id="mn">
+<label>Tijd</label><input id="mt" type="time">
+<label>Opmerking</label><input id="mo">
+<button class="primary" onclick="addMed()">Toevoegen</button></div>
+<div class="card"><h2>Mijn tijden</h2><div id="ml"></div></div></section>
+
+
+<section id="agenda" class="page"><div class="card"><h2>📅 Afsprakenagenda</h2>
+<p class="small">Een eenvoudig overzicht van je afspraken voor je revalidatietraject.</p>
+<label>Datum van afspraak</label><div class="row"><input id="adate" type="date"><button type="button" onclick="setSectionDateToday('adate')">📅 Vandaag</button></div>
+<label>Tijd</label><input id="atime" type="time">
+<label>Behandelaar / discipline</label><select id="atype"><option>Fysiotherapie</option><option>Ergotherapie</option><option>Diëtist</option><option>Psycholoog</option><option>Maatschappelijk werk</option><option>Revalidatiearts</option><option>Verpleegkundige</option><option>Andere afspraak</option></select>
+<label>Onderwerp</label><input id="asubject" placeholder="Bijv. voortgang / controle / behandeling"><label>Herinnering</label><select id="arem"><option>Geen</option><option>Op de dag zelf</option><option>1 dag ervoor</option><option>2 dagen ervoor</option></select>
+<label>Opmerking</label><textarea id="anote"></textarea>
+<button class="primary" onclick="addAppointment()">Afspraak toevoegen</button>
+</div>
+<div class="card"><h2>Mijn afspraken</h2><div id="alist"></div></div><div class="card"><h2>Revalidatiearts</h2><p class="small">Gebruik hierboven <b>Revalidatiearts</b> als behandelaar. Je kunt daar datum, tijd, onderwerp en een herinneringskeuze vastleggen.</p></div></section>
+
+<section id="weight" class="page"><div class="card"><h2>⚖️ Gewicht</h2>
+<div class="section-date"><label for="date-gewicht">Datum van registratie</label><div class="row"><input id="date-gewicht" type="date"><button type="button" onclick="setSectionDateToday('date-gewicht')">📅 Vandaag</button></div><div class="small">Kies een eerdere datum als je dit achteraf invoert.</div></div>
+<p class="small">Registreer je gewicht wanneer je dat met je behandelteam hebt afgesproken. De app geeft geen oordeel over je gewicht.</p>
+<label>Gewicht (kg)</label><input id="kg" type="number" min="0" step=".1" placeholder="bijv. 82.4">
+<label>Opmerking</label><textarea id="kgnote"></textarea>
+<button class="primary" onclick="saveWeight()">Gewicht opslaan</button>
+</div>
+<div class="card"><h2>Gewichtslog</h2><div id="wlist"></div></div></section>
+
+<section id="evening" class="page"><div class="card"><h2>🍫 Wat snoepte je vanavond?</h2>
+<div class="section-date"><label for="date-avond">Datum van registratie</label><div class="row"><input id="date-avond" type="date"><button type="button" onclick="setSectionDateToday('date-avond')">📅 Vandaag</button></div><div class="small">Kies een eerdere datum als je dit achteraf invoert.</div></div>
+<p class="small">Gewoon eerlijk bijhouden, zonder oordeel. Dit kan handig zijn om samen met de diëtist naar je eetpatroon te kijken.</p>
+<label>Wat heb je gegeten?</label><input id="snack" placeholder="Bijv. chips, chocolade, koek, ijs">
+<label>Ongeveer hoeveel?</label><input id="snackamount" placeholder="Bijv. 2 koekjes / klein bakje">
+<label>Wat heb je gedronken?</label><input id="drink" placeholder="Bijv. water, frisdrank, thee">
+<label>Waarom / moment?</label><select id="snackreason"><option>Gewoon trek</option><option>Gezelligheid</option><option>Stress / spanning</option><option>Verveling</option><option>Na het eten</option><option>Anders</option></select>
+<label>Opmerking</label><textarea id="snacknote"></textarea>
+<button class="primary" onclick="saveEvening()">Avondregistratie opslaan</button>
+</div></section>
+
+<section id="share" class="page"><div class="card"><h2>📄 Log maken en versturen</h2>
+<p class="small">Kies één onderdeel of alles. Kies daarna een dag, week of maand. Je kunt het overzicht als PDF downloaden of meteen delen als je apparaat dat ondersteunt.</p>
+<label for="logCategory">1. Wat wil je in het log?</label><select id="logCategory"><option value="all">Alle onderdelen</option><option value="fysio">🚶 Fysiotherapie / wandeltest</option><option value="ergo">🪑 Ergotherapie</option><option value="dietist">🥗 Voeding / diëtist</option><option value="team">👥 Dag & team / slaap / ADL</option><option value="klacht">🩹 Klachten / pijn / gevoel / kracht</option><option value="gewicht">⚖️ Gewicht</option><option value="avond">🍫 Avondregistratie</option><option value="afspraak">📅 Afspraken</option><option value="medicatie">💊 Medicatie-overzicht</option></select>
+<label for="logPeriod">2. Welke periode?</label><select id="logPeriod"><option value="day">Eén dag</option><option value="week">Eén week (maandag t/m zondag)</option><option value="month">Eén maand</option><option value="custom">Zelf datums kiezen</option></select>
+<label for="logAnchor">3. Kies een datum in die periode</label><div class="row"><input id="logAnchor" type="date"><button type="button" onclick="setSectionDateToday('logAnchor');syncLogPeriodDates()">📅 Vandaag</button></div>
+<div id="customLogDates" class="row hidden"><div><label for="logFrom">Vanaf</label><input id="logFrom" type="date"></div><div><label for="logTo">Tot en met</label><input id="logTo" type="date"></div></div>
+<div class="section-actions"><button class="primary" onclick="generateCategoryLog()">🔎 Log bekijken</button><button class="green" onclick="downloadCategoryPDF()">📥 PDF downloaden</button><button onclick="shareCategoryPDF()">📤 PDF versturen</button><button onclick="printCategoryLog()">🖨️ Afdrukken</button></div>
+<div id="categoryLogStatus" class="small" style="margin-top:10px" aria-live="polite">Kies de opties en tik op ‘Log bekijken’.</div><div id="categoryLogPreview" class="log-preview" style="margin-top:10px;display:none"></div>
+</div><div class="card"><h2>Privacy</h2><div class="notice">Dit is een persoonlijk hulpmiddel en geen officieel Rijndam-systeem. De gegevens blijven lokaal in deze browser. Bewaar een back-up.</div></div></section>
+</main>
+<div class="iphonebar"><button onclick="page('home')">🏠<br>Menu</button><button onclick="page('walk')">🚶<br>Fysio</button><button onclick="page('ergo')">🪑<br>Ergo</button><button onclick="page('share')">📄<br>Logs</button></div>
+<div id="toast" style="position:fixed;left:14px;right:14px;bottom:18px;background:#32103b;color:#fff;padding:13px;border-radius:13px;text-align:center;display:none"></div>
+<script>
+const KEY='gavin-incomplete-dwarslaesie-v4',MKEY='gavin-meds-v4',CKEY='gavin-klachten-v1',BKEY='gavin-klachten-baseline-v1',$=id=>document.getElementById(id);
+if(!localStorage.getItem(KEY)&&localStorage.getItem('gavin-incomplete-dwarslaesie-v3'))localStorage.setItem(KEY,localStorage.getItem('gavin-incomplete-dwarslaesie-v3'));
+if(!localStorage.getItem('gavin-appts-v2')&&localStorage.getItem('gavin-appts-v1'))localStorage.setItem('gavin-appts-v2',localStorage.getItem('gavin-appts-v1'));
+const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}},put=a=>localStorage.setItem(KEY,JSON.stringify(a));
+function todayKey(d=new Date()){return d.toLocaleDateString('nl-NL')}
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('page','active');if(id==='home')home();if(id==='summary')renderSummary();if(id==='meds')renderMeds();if(id==='agenda')renderAppointments();if(id==='weight')renderWeights();if(id==='defects')renderDefects();scrollTo(0,0)}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
+function localDateValue(d=new Date()){const z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`}
+function setSectionDateToday(id){const el=$(id);if(el)el.value=localDateValue()}
+function sectionDateValue(id){const el=$(id),v=el&&el.value?el.value:localDateValue();const parts=v.split('-').map(Number);if(parts.length!==3||parts.some(Number.isNaN))return new Date();const d=new Date(parts[0],parts[1]-1,parts[2],new Date().getHours(),new Date().getMinutes(),0,0);return Number.isNaN(d.getTime())?new Date():d}
+function selectedRecordDate(type){const ids={fysio:'date-fysio',ergo:'date-ergo',dietist:'date-dietist',team:'date-team',klacht:'date-klacht',gewicht:'date-gewicht',avond:'date-avond'};return sectionDateValue(ids[type]||'date-fysio')}
+function add(type,obj){const d=selectedRecordDate(type);let a=get();a.unshift({id:Date.now(),date:d.toISOString(),type,...obj});put(a);toast('Opgeslagen op '+d.toLocaleDateString('nl-NL'));home();renderSummary()}
+let ws=0,wi=null,wsStartedAt=null;
+function wf(s){return [Math.floor(s/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')}
+function updateWalk(){if(wsStartedAt){ws=Math.max(0,Math.floor((Date.now()-wsStartedAt)/1000));$('wtimer').textContent=wf(ws)}}
+function wsStart(){if(wi)return;wsStartedAt=Date.now()-ws*1000;localStorage.setItem('gavin-walk-running',JSON.stringify({startedAt:wsStartedAt,savedAt:Date.now()}));updateWalk();wi=setInterval(updateWalk,300)}
+function wsStop(){clearInterval(wi);wi=null;localStorage.removeItem('gavin-walk-running');updateWalk()}
+function wsReset(){wsStop();ws=0;wsStartedAt=null;$('wtimer').textContent='00:00'}
+function restoreWalk(){let raw=localStorage.getItem('gavin-walk-running');if(!raw)return;try{let x=JSON.parse(raw);wsStartedAt=Number(x.startedAt);if(wsStartedAt){updateWalk();wi=setInterval(updateWalk,300)}}catch(e){localStorage.removeItem('gavin-walk-running')}}
+function saveWalk(){add('fysio',{seconds:ws,meters:$('wm').value,km:$('wk').value,limit:$('wl').value,painLocation:$('wPainLocation').value.trim(),pain:$('wp').value,recovery:$('wr').value,recoveryNote:$('wrt').value});wsReset();$('wPainLocation').value='';$('wm').value='';$('wk').value='';$('wp').value='0';$('wr').value='';$('wrt').value=''}
+function saveErgo(){add('ergo',{shoulders:$('esh').value,whenPain:$('ewhen').value,pain:$('ep').value,action:$('ewhat').value,flat:$('eflat').value,note:$('enote').value});toast('Ergo-registratie opgeslagen');}
+let lastCategoryLog='',lastCategoryRows=[];
+const LOG_LABELS={fysio:'Fysiotherapie / wandeltest',ergo:'Ergotherapie',dietist:'Voeding / diëtist',team:'Dag & team / slaap / ADL',klacht:'Klachten / pijn / gevoel / kracht',gewicht:'Gewicht',avond:'Avondregistratie',afspraak:'Afspraken',medicatie:'Medicatie-overzicht',all:'Alle onderdelen'};
+function dateInputValue(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function syncLogPeriodDates(){const mode=$('logPeriod').value,anchor=$('logAnchor').value||localDateValue();$('customLogDates').classList.toggle('hidden',mode!=='custom');if(mode==='custom')return;let d=new Date(anchor+'T12:00:00'),from=new Date(d),to=new Date(d);if(mode==='week'){let day=(d.getDay()+6)%7;from.setDate(d.getDate()-day);to=new Date(from);to.setDate(from.getDate()+6)}else if(mode==='month'){from=new Date(d.getFullYear(),d.getMonth(),1);to=new Date(d.getFullYear(),d.getMonth()+1,0)}$('logFrom').value=dateInputValue(from);$('logTo').value=dateInputValue(to)}
+function openCategoryLog(category){$('logCategory').value=category;$('logPeriod').value='month';$('logAnchor').value=localDateValue();syncLogPeriodDates();page('share');generateCategoryLog()}
+function logDateText(d){if(!d)return 'Datum onbekend';let x=new Date(d);return Number.isNaN(x.getTime())?'Datum onbekend':x.toLocaleString('nl-NL')}
+function categoryLogData(category,from,to){let start=from?new Date(from+'T00:00:00'):new Date('1970-01-01T00:00:00');let end=to?new Date(to+'T23:59:59.999'):new Date('2999-12-31T23:59:59.999');let rows=[];const inRange=d=>{let x=new Date(d);return !Number.isNaN(x.getTime())&&x>=start&&x<=end};
+ if(category==='all'||['fysio','ergo','dietist','team','avond'].includes(category))get().filter(x=>(category==='all'||x.type===category)&&inRange(x.date)).forEach(x=>rows.push({date:x.date,type:x.type,data:x}));
+ if(category==='all'||category==='klacht')complaints().filter(x=>inRange(x.date)).forEach(x=>rows.push({date:x.date,type:'klacht',data:x}));
+ if(category==='all'||category==='gewicht')weights().filter(x=>inRange(x.date)).forEach(x=>rows.push({date:x.date,type:'gewicht',data:x}));
+ if(category==='all'||category==='afspraak')appointments().filter(x=>inRange(x.date)).forEach(x=>rows.push({date:(x.date||'')+'T'+(x.time||'00:00'),type:'afspraak',data:x}));
+ if(category==='medicatie')meds().forEach(x=>rows.push({date:'',type:'medicatie',data:x}));rows.sort((a,b)=>new Date(a.date||0)-new Date(b.date||0));return rows}
+function formatCategoryRow(r){let x=r.data,dt=logDateText(r.date);switch(r.type){case'fysio':return `${dt}\nWandeltest — ${x.meters||'—'} meter${x.km?' / '+x.km+' km':''}\nTijd: ${x.seconds?Math.floor(x.seconds/60)+' min '+x.seconds%60+' sec':'niet geregistreerd'} • Pijn: ${x.pain||0}/10\nPijnlocatie: ${x.painLocation||'niet ingevuld'}\nGrens: ${x.limit||'—'} • Hersteltijd: ${x.recovery||'—'} min\nHerstelnotitie: ${x.recoveryNote||'—'}`;case'ergo':return `${dt}\nErgotherapie — Schouders: ${x.shoulders||'—'}\nWanneer pijn ontstond: ${x.whenPain||'—'} • Pijn: ${x.pain||0}/10\nActie bij pijn: ${x.action||'—'}\n10 minuten plat: ${x.flat||'—'}\nOpmerking: ${x.note||'—'}`;case'dietist':return `${dt}\nVoeding — Ontbijt: ${x.ontbijt?'ja':'nee'} • Lunch: ${x.lunch?'ja':'nee'} • Avondmaaltijd: ${x.avond?'ja':'nee'} • Extra eiwit/zuivel: ${x.eiwit?'ja':'nee'}\nNotitie: ${x.note||'—'}`;case'team':return `${dt}\nDag & team — Slaap: ${x.sleep||'—'} • Aankleden: ${x.dress||'—'} • Energie: ${x.energy||'—'}/10 • Pijn: ${x.pain||'—'}/10\nOpstaan: ${x.rise||'—'}\nHulp: ${x.help||'—'}\nObstakels: ${x.obstacles||'—'}\nWat ging beter: ${x.better||'—'}\nBespreken met team: ${x.team||'—'}`;case'klacht':return `${dt}\nKlachtlocatie: ${x.location||'—'} • Pijn: ${x.pain||0}/10\nGevoel verminderd/afwezig: ${x.numb?'ja':'nee'} • Kracht verminderd/afwezig: ${x.weak?'ja':'nee'}\nNotitie: ${x.note||'—'}`;case'gewicht':return `${dt}\nGewicht: ${x.kg||'—'} kg\nOpmerking: ${x.note||'—'}`;case'avond':return `${dt}\nAvondregistratie — Gegeten: ${x.snack||'—'} • Hoeveelheid: ${x.amount||'—'}\nGedronken: ${x.drink||'—'} • Moment/reden: ${x.reason||'—'}\nOpmerking: ${x.note||'—'}`;case'afspraak':return `${x.date||'Datum onbekend'} ${x.time||''}\n${x.type||'Afspraak'} — ${x.subject||'Geen onderwerp'}\nOpmerking: ${x.note||'—'} • Herinnering: ${x.reminder||'—'}`;case'medicatie':return `${x.name||'Medicatie'} • Tijd: ${x.time||'niet ingesteld'}\n${x.note||''}`;default:return JSON.stringify(x,null,2)}}
+function generateCategoryLog(){if($('logPeriod').value!=='custom')syncLogPeriodDates();let category=$('logCategory').value,from=$('logFrom').value,to=$('logTo').value;if(from&&to&&from>to){$('categoryLogStatus').textContent='Controleer de periode: de begindatum valt na de einddatum.';return false}lastCategoryRows=categoryLogData(category,from,to);let title=`GAVIN REVALIDATIE — ${LOG_LABELS[category]||category}\nPeriode: ${from||'begin'} t/m ${to||'heden'}\nGemaakt op: ${new Date().toLocaleString('nl-NL')}\nAantal registraties: ${lastCategoryRows.length}\n\n`;lastCategoryLog=title+(lastCategoryRows.length?lastCategoryRows.map((r,i)=>`${i+1}. ${formatCategoryRow(r)}`).join('\n\n------------------------------\n\n'):'Geen registraties gevonden voor deze selectie.');$('categoryLogStatus').textContent=`${lastCategoryRows.length} registratie(s) gevonden. Je kunt nu de PDF downloaden of delen.`;$('categoryLogPreview').style.display='block';$('categoryLogPreview').textContent=lastCategoryLog;return true}
+function pdfEscape(s){return String(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)').replace(/[^\x20-\x7E]/g,'?')}
+function makeSimplePDF(text){let lines=[];for(let para of String(text).split('\n')){if(!para){lines.push('');continue}while(para.length>88){let cut=para.lastIndexOf(' ',88);if(cut<35)cut=88;lines.push(para.slice(0,cut));para=para.slice(cut).trim()}lines.push(para)}let pages=[];for(let i=0;i<lines.length;i+=48)pages.push(lines.slice(i,i+48));if(!pages.length)pages=[['Geen gegevens']];let objs=[],pageIds=[];const addObj=x=>{objs.push(x);return objs.length};let fontId=addObj('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');let pagesId=addObj('');for(let pg of pages){let stream='BT\n/F1 10 Tf\n48 790 Td\n14 TL\n';for(let line of pg)stream+=`(${pdfEscape(line)}) Tj\nT*\n`;stream+='ET';let streamId=addObj(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);let pageId=addObj(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${streamId} 0 R >>`);pageIds.push(pageId)}objs[pagesId-1]=`<< /Type /Pages /Kids [${pageIds.map(id=>id+' 0 R').join(' ')}] /Count ${pageIds.length} >>`;let catalogId=addObj(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);let pdf='%PDF-1.4\n',offsets=[0];for(let i=0;i<objs.length;i++){offsets.push(pdf.length);pdf+=`${i+1} 0 obj\n${objs[i]}\nendobj\n`}let xref=pdf.length;pdf+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`;for(let i=1;i<offsets.length;i++)pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';pdf+=`trailer\n<< /Size ${objs.length+1} /Root ${catalogId} 0 R >>\nstartxref\n${xref}\n%%EOF`;return new Blob([pdf],{type:'application/pdf'})}
+function logFilename(ext='pdf'){return `Gavin_Revalidatie_${$('logCategory').value}_${$('logFrom').value||'begin'}_tot_${$('logTo').value||'heden'}.${ext}`}
+function downloadCategoryPDF(){if(!generateCategoryLog())return;let blob=makeSimplePDF(lastCategoryLog),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=logFilename('pdf');document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('PDF gedownload')}
+async function shareCategoryPDF(){if(!generateCategoryLog())return;let file=new File([makeSimplePDF(lastCategoryLog)],logFilename('pdf'),{type:'application/pdf'});try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({title:'Gavin revalidatie-log',files:[file]})}else{downloadCategoryPDF();toast('PDF gedownload. Je kunt hem daarna als bijlage versturen.')}}catch(e){if(e.name!=='AbortError')toast('Delen niet gelukt. Download de PDF en voeg die toe aan je bericht.')}}
+function printCategoryLog(){if(!generateCategoryLog())return;let w=window.open('','_blank');if(!w){toast('Sta pop-ups toe of gebruik PDF downloaden.');return}w.document.write('<!doctype html><html lang="nl"><head><meta charset="utf-8"><title>Revalidatielog</title><style>body{font:12pt Arial,sans-serif;margin:22mm;white-space:pre-wrap;line-height:1.45}h1{font-size:18pt} @page{size:A4;margin:18mm}</style></head><body><h1>Gavin — Revalidatielog</h1><pre style="white-space:pre-wrap;font:10pt Arial">'+lastCategoryLog.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+
+let er=7200,ei=null,ecycle='work',eEndAt=null,flatEndAt=null,fi=null,fs=600;
+function ef(s){let h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return[h,m,x].map(v=>String(v).padStart(2,'0')).join(':')}
+function beep(freq=740,dur=0.35){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.type='sine';g.gain.value=.18;o.connect(g);g.connect(c.destination);o.start();setTimeout(()=>{o.stop();c.close()},dur*1000)}catch(e){}}
+function cycleSound(){beep(740,.25);setTimeout(()=>beep(980,.35),300)}
+function persistErgo(){localStorage.setItem('gavin-ergo-running',JSON.stringify({mode:ecycle,workEndAt:eEndAt,flatEndAt:flatEndAt,workRemaining:er,flatRemaining:fs,savedAt:Date.now()}))}
+function renderErgo(){ $('etimer').textContent=ef(er); $('ft').textContent=ef(fs); $('ecycle').textContent=ecycle==='work'?'2 uur werken':'10 minuten plat'; }
+function startWorkCycle(endAt){ecycle='work';eEndAt=endAt||Date.now()+er*1000;flatEndAt=null;clearInterval(fi);fi=null;clearInterval(ei);ei=setInterval(()=>{er=Math.max(0,Math.ceil((eEndAt-Date.now())/1000));$('etimer').textContent=ef(er);if(er<=0){clearInterval(ei);ei=null;cycleSound();startFlatCycle(Date.now()+600000)}},250);$('estatus').textContent='2 uur loopt.';renderErgo();persistErgo()}
+function startFlatCycle(endAt){ecycle='flat';flatEndAt=endAt||Date.now()+600000;eEndAt=null;er=0;clearInterval(ei);ei=null;clearInterval(fi);fi=setInterval(()=>{fs=Math.max(0,Math.ceil((flatEndAt-Date.now())/1000));$('ft').textContent=ef(fs);if(fs<=0){clearInterval(fi);fi=null;cycleSound();er=7200;fs=600;startWorkCycle(Date.now()+7200000)}},250);$('estatus').textContent='10 minuten platliggen loopt.';renderErgo();persistErgo()}
+function eStart(){if(ei||fi)return;startWorkCycle(Date.now()+er*1000)}
+function eStop(){clearInterval(ei);ei=null;clearInterval(fi);fi=null;persistErgo()}
+function eReset(){clearInterval(ei);ei=null;clearInterval(fi);fi=null;er=7200;fs=600;ecycle='work';eEndAt=null;flatEndAt=null;localStorage.removeItem('gavin-ergo-running');renderErgo();$('estatus').textContent='Klaar voor 2 uur.'}
+function flatStart(auto=false){if(ei||fi)return;startFlatCycle(Date.now()+fs*1000);if(auto)$('estatus').textContent='10 minuten platliggen loopt.'}
+function flatStop(){clearInterval(fi);fi=null;persistErgo()}
+function restoreErgo(){let raw=localStorage.getItem('gavin-ergo-running');if(!raw)return;try{let x=JSON.parse(raw);ecycle=x.mode||'work';er=Number(x.workRemaining)||7200;fs=Number(x.flatRemaining)||600;eEndAt=x.workEndAt?Number(x.workEndAt):null;flatEndAt=x.flatEndAt?Number(x.flatEndAt):null;let now=Date.now();if(ecycle==='work'&&eEndAt){if(eEndAt<=now){cycleSound();startFlatCycle(now+600000)}else{er=Math.ceil((eEndAt-now)/1000);startWorkCycle(eEndAt)}}else if(ecycle==='flat'&&flatEndAt){if(flatEndAt<=now){cycleSound();startWorkCycle(now+7200000)}else{fs=Math.ceil((flatEndAt-now)/1000);startFlatCycle(flatEndAt)}}renderErgo()}catch(e){localStorage.removeItem('gavin-ergo-running')}}
+function saveFood(){add('dietist',{ontbijt:$('b').checked,lunch:$('l').checked,avond:$('d').checked,eiwit:$('z').checked,note:$('fn').value})}
+function saveTeam(){add('team',{sleep:$('sl').value,rise:$('rise').value,dress:$('dress').value,help:$('help').value,energy:$('energy').value,pain:$('pain').value,obstacles:$('ob').value,better:$('better').value,team:$('teamnote').value})}
+function meds(){try{return JSON.parse(localStorage.getItem(MKEY)||'[]')}catch(e){return[]}}
+const defaultMeds=[['Pregabaline 150 mg','','2× per dag — tijd invullen volgens voorschrift'],['Oxycodon langwerkend','','2× per dag — dosering/tijd controleren met voorschrift'],['Paracetamol 1000 mg','','2× per dag — tijd invullen volgens voorschrift'],['Macrogol','','1× per dag — tijd/dosering controleren met voorschrift'],['Morfine kortwerkend','','zo nodig, maximaal 1× per dag — alleen volgens voorschrift']];
+function seedMeds(){if(localStorage.getItem(MKEY))return;localStorage.setItem(MKEY,JSON.stringify(defaultMeds.map((x,i)=>({id:Date.now()+i,name:x[0],time:x[1],note:x[2]}))))}
+function addMed(){let a=meds();a.push({id:Date.now(),name:$('mn').value,time:$('mt').value,note:$('mo').value});localStorage.setItem(MKEY,JSON.stringify(a));$('mn').value='';$('mo').value='';renderMeds();toast('Medicatie toegevoegd');renderSummary()}
+function renderMeds(){seedMeds();let a=meds().sort((x,y)=>x.time.localeCompare(y.time));$('ml').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.time}</span> <b>${x.name}</b><br><span class="small">${x.note||''}</span><br><button onclick="delMed(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen medicatie.</p>'}
+function delMed(id){localStorage.setItem(MKEY,JSON.stringify(meds().filter(x=>x.id!==id)));renderMeds()}
+const complaintLocations=['Onderrug','Billen','Rechterbeen','Linkerbeen','Rechtervoet','Linkervoet','Rechterpols/hand','Linkerpols/hand','Rechterarm','Linkerarm','Nek','Schouders','Andere locatie'];
+const baselineDefault={
+'Onderrug':{pain:false,numb:true,weak:false},'Billen':{pain:false,numb:true,weak:false},'Rechterbeen':{pain:false,numb:true,weak:true},'Linkerbeen':{pain:false,numb:true,weak:false},'Rechtervoet':{pain:false,numb:true,weak:false},'Linkervoet':{pain:false,numb:true,weak:false},'Rechterpols/hand':{pain:false,numb:false,weak:false},'Linkerpols/hand':{pain:false,numb:false,weak:true},'Rechterarm':{pain:false,numb:false,weak:false},'Linkerarm':{pain:false,numb:false,weak:false},'Nek':{pain:false,numb:false,weak:false},'Schouders':{pain:false,numb:false,weak:false},'Andere locatie':{pain:false,numb:false,weak:false}};
+function complaints(){try{return JSON.parse(localStorage.getItem(CKEY)||'[]')}catch(e){return[]}}
+function baseline(){try{return JSON.parse(localStorage.getItem(BKEY)||'null')||baselineDefault}catch(e){return baselineDefault}}
+function renderLocationSelects(){let opts=complaintLocations.map(x=>`<option>${x}</option>`).join('');$('cloc').innerHTML=opts;$('chartloc').innerHTML=opts}
+function renderDefects(){renderLocationSelects();let b=baseline();$('baselineGrid').innerHTML='<div class="symgrid">'+complaintLocations.map((loc,i)=>{let x=b[loc]||{};return `<div class="symbox"><b>${loc}</b><label class="symcheck"><input type="checkbox" data-base="pain" data-loc="${i}" ${x.pain?'checked':''}> Pijn</label><label class="symcheck"><input type="checkbox" data-base="numb" data-loc="${i}" ${x.numb?'checked':''}> Geen / weinig gevoel</label><label class="symcheck"><input type="checkbox" data-base="weak" data-loc="${i}" ${x.weak?'checked':''}> Geen / weinig kracht</label></div>`}).join('')+'</div>';let cs=complaints();let last=cs.slice().sort((a,b)=>b.id-a.id).slice(0,12);$('complaintList').innerHTML=last.length?'<h3>Laatste metingen</h3>'+last.map(x=>`<div class="entry"><span class="tag">${new Date(x.date).toLocaleDateString('nl-NL')} ${new Date(x.date).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}</span> <b>${x.location}</b><br><span class="small">Pijn ${x.pain}/10 • ${x.numb?'geen/weinig gevoel • ':''}${x.weak?'geen/weinig kracht • ':''}${x.note||''}</span></div>`).join(''):'<p class="small">Nog geen klachtenmetingen opgeslagen.</p>';renderPainChart()}
+function saveBaseline(){let out={};document.querySelectorAll('[data-base]').forEach(el=>{let loc=complaintLocations[Number(el.dataset.loc)];out[loc]=out[loc]||{pain:false,numb:false,weak:false};out[loc][el.dataset.base]=el.checked});localStorage.setItem(BKEY,JSON.stringify(out));toast('Uitgangssituatie opgeslagen');renderDefects()}
+function saveComplaint(){let pain=Math.max(0,Math.min(10,Number($('cpain').value)||0));let a=complaints();a.unshift({id:Date.now(),date:selectedRecordDate('klacht').toISOString(),location:$('cloc').value,pain,numb:$('cnumb').checked,weak:$('cweak').checked,note:$('cnote').value.trim()});localStorage.setItem(CKEY,JSON.stringify(a));$('cnote').value='';$('cpain').value='0';$('cnumb').checked=false;$('cweak').checked=false;toast('Klachtenmeting opgeslagen');renderDefects();renderSummary()}
+function renderPainChart(){let c=$('painChart');if(!c)return;let loc=$('chartloc').value||complaintLocations[0],rows=complaints().filter(x=>x.location===loc).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(-12);let dpr=window.devicePixelRatio||1,w=c.clientWidth||320,h=240;c.width=w*dpr;c.height=h*dpr;let ctx=c.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);let pad={l:38,r:14,t:18,b:40};ctx.strokeStyle='#e2d7e4';ctx.lineWidth=1;for(let i=0;i<=10;i+=2){let y=pad.t+(10-i)*(h-pad.t-pad.b)/10;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillStyle='#746976';ctx.font='11px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';ctx.fillText(String(i),10,y+4)}if(!rows.length){ctx.fillStyle='#746976';ctx.font='13px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';ctx.fillText('Nog geen metingen voor '+loc+'.',pad.l,110);$('painStats').textContent='Sla meerdere metingen op om een trend te zien.';return}let plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;ctx.strokeStyle='#5a1a68';ctx.lineWidth=2.5;ctx.beginPath();rows.forEach((r,i)=>{let x=rows.length===1?pad.l+plotW/2:pad.l+i*plotW/(rows.length-1),y=pad.t+(10-r.pain)*plotH/10;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();rows.forEach((r,i)=>{let x=rows.length===1?pad.l+plotW/2:pad.l+i*plotW/(rows.length-1),y=pad.t+(10-r.pain)*plotH/10;ctx.fillStyle='#7d2b8a';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#746976';ctx.font='10px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText(new Date(r.date).toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit'}),x,h-15)});ctx.textAlign='left';let vals=rows.map(x=>x.pain),avg=vals.reduce((a,b)=>a+b,0)/vals.length;let latest=rows[rows.length-1].pain;$('painStats').textContent=`${rows.length} meting(en) • laatste pijn ${latest}/10 • gemiddelde ${avg.toFixed(1)}/10 • periode ${new Date(rows[0].date).toLocaleDateString('nl-NL')} t/m ${new Date(rows[rows.length-1].date).toLocaleDateString('nl-NL')}`}
+window.addEventListener('resize',()=>{if(document.getElementById('defects')?.classList.contains('active'))renderPainChart()});
+
+function appointments(){try{return JSON.parse(localStorage.getItem('gavin-appts-v2')||'[]')}catch(e){return[]}}
+function addAppointment(){let a=appointments();a.push({id:Date.now(),date:$('adate').value,time:$('atime').value,type:$('atype').value,subject:$('asubject').value,note:$('anote').value,reminder:$('arem').value});a.sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time));localStorage.setItem('gavin-appts-v2',JSON.stringify(a));renderAppointments();toast('Afspraak toegevoegd');renderSummary()}
+function renderAppointments(){let a=appointments();$('alist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${x.date} ${x.time||''}</span><br><b>${x.type}</b> — ${x.subject||'Afspraak'}<br><span class="small">${x.note||''}${x.reminder&&x.reminder!=='Geen'?' • Herinnering: '+x.reminder:''}</span><br><button onclick="delAppointment(${x.id})">Verwijderen</button></div>`).join(''):'<p class="small">Nog geen afspraken.</p>'}
+function delAppointment(id){localStorage.setItem('gavin-appts-v2',JSON.stringify(appointments().filter(x=>x.id!==id)));renderAppointments()}
+function weights(){try{return JSON.parse(localStorage.getItem('gavin-weight-v1')||'[]')}catch(e){return[]}}
+function saveWeight(){let a=weights();a.unshift({id:Date.now(),date:selectedRecordDate('gewicht').toISOString(),kg:$('kg').value,note:$('kgnote').value});localStorage.setItem('gavin-weight-v1',JSON.stringify(a));$('kg').value='';$('kgnote').value='';renderWeights();toast('Gewicht opgeslagen');renderSummary()}
+function renderWeights(){let a=weights();$('wlist').innerHTML=a.length?a.map(x=>`<div class="entry"><span class="tag">${new Date(x.date).toLocaleDateString('nl-NL')}</span> <b>${x.kg} kg</b><br><span class="small">${x.note||''}</span></div>`).join(''):'<p class="small">Nog geen gewichtsmetingen.</p>'}
+function saveEvening(){add('avond',{snack:$('snack').value,amount:$('snackamount').value,drink:$('drink').value,reason:$('snackreason').value,note:$('snacknote').value})}
+function dayTypes(){let k=todayKey();return new Set(get().filter(x=>todayKey(new Date(x.date))===k).map(x=>x.type))}
+function dailyStatus(){
+  let d=dayTypes(), c=complaints().some(x=>todayKey(new Date(x.date))===todayKey()), w=weights().some(x=>todayKey(new Date(x.date))===todayKey());
+  return [
+    ['team','Dag & Team / slaap & ADL','team'],
+    ['dietist','Voeding / maaltijden','food'],
+    ['fysio','Lopen / wandeltest','walk'],
+    ['ergo','Ergo / werken en plat','ergo'],
+    ['klacht','Pijn / gevoel / kracht','defects'],
+    ['medicatie','Medicatie gecontroleerd','meds'],
+    ['gewicht','Gewicht (indien vandaag meten)','weight',w],
+    ['avond','Avond / snack','evening']
+  ].map(x=>({key:x[0],label:x[1],page:x[2],done:x[3]!==undefined?x[3]:d.has(x[0])}));
+}
+function renderDailyChecklist(){
+  let rows=dailyStatus();
+  $('dailyChecklist').innerHTML=rows.map(x=>`<div class="summaryrow ${x.done?'done':''}"><span class="dot"></span><b>${x.label}</b><span class="small">${x.done?'Ingevuld':'Nog doen'}</span><button onclick="page('${x.page}')">${x.done?'Open':'Invullen'}</button></div>`).join('');
+  let missing=rows.filter(x=>!x.done);
+  $('missingList').innerHTML=missing.length?`<div class="summarywarn"><b>${missing.length} onderdeel${missing.length===1?'':'en'} nog open.</b> Rond deze af voordat je de dag afsluit.</div>`:'<div class="summaryok"><b>Alles is ingevuld.</b> Je dag kan worden afgesloten. 🎉</div>';
+}
+function finishDay(){let missing=dailyStatus().filter(x=>!x.done);if(missing.length){toast('Nog '+missing.length+' onderdeel'+(missing.length===1?'':'en')+' invullen.');page(missing[0].page);return}localStorage.setItem('gavin-day-closed-'+todayKey(),new Date().toISOString());toast('Dag compleet opgeslagen.');renderSummary()}
+function renderSummary(){
+  renderDailyChecklist();
+  let today=get().filter(x=>todayKey(new Date(x.date))===todayKey()).sort((a,b)=>b.id-a.id),cc=complaints().filter(x=>todayKey(new Date(x.date))===todayKey()).sort((a,b)=>b.id-a.id);
+  let labels={team:'Dag & Team',dietist:'Voeding',fysio:'Lopen',ergo:'Ergo',avond:'Avond'};
+  let detail=today.slice(0,8).map(x=>`<div class="entry"><span class="tag">${labels[x.type]||x.type}</span> <b>${new Date(x.date).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}</b><br><span class="small">${summaryLine(x)}</span></div>`).join('');
+  if(cc.length)detail+=cc.slice(0,4).map(x=>`<div class="entry"><span class="tag">Klacht</span> <b>${x.location}</b><br><span class="small">Pijn ${x.pain}/10${x.numb?' • geen/weinig gevoel':''}${x.weak?' • geen/weinig kracht':''}</span></div>`).join('');
+  $('summaryText').innerHTML=`<div class="summaryok"><b>${today.length+cc.length} registratie(s) vandaag.</b><br>De checklist hierboven bepaalt of de dag compleet is.</div>${detail||'<p class="small">Nog geen registraties vandaag.</p>'}`;
+  renderSavedSummaries();
+}
+function summaryLine(x){if(x.type==='fysio')return `${x.meters||x.km||0} ${x.meters?'meter':'km'} • pijn ${x.pain||0}/10 • grens: ${x.limit||'niet ingevuld'}`;if(x.type==='ergo')return `pijn ${x.pain||0}/10 • schouders: ${x.shoulders||''} • plat: ${x.flat||''}`;if(x.type==='dietist')return `Ontbijt ${x.ontbijt?'✓':'–'} • lunch ${x.lunch?'✓':'–'} • avond ${x.avond?'✓':'–'} • eiwit ${x.eiwit?'✓':'–'}`;if(x.type==='team')return `Slaap ${x.sleep||''} • energie ${x.energy||0}/10 • pijn ${x.pain||0}/10`;if(x.type==='avond')return `${x.snack||'Niets ingevuld'}${x.amount?' • '+x.amount:''}`;return 'Registratie opgeslagen.'}
+function home(){$('today').textContent=new Date().toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});renderSummary();reminderCheck()}
+function reminderCheck(){let h=new Date().getHours();if(h>=18){let missing=dailyStatus().filter(x=>!x.done);if(missing.length)toast('Dagcontrole: nog '+missing.length+' onderdeel'+(missing.length===1?'':'en')+' invullen.');}}
+async function enableNotifications(){if(!('Notification'in window)){toast('Meldingen worden niet door deze browser ondersteund.');return}let p=await Notification.requestPermission();toast(p==='granted'?'Meldingen toegestaan.':'Meldingen niet toegestaan.')}
+const SKEY='gavin-saved-summaries-v1';
+function periodRange(kind,base=new Date()){let s=new Date(base);s.setHours(0,0,0,0);let e=new Date(s);if(kind==='day'){e.setDate(e.getDate()+1)}else if(kind==='week'){let day=(s.getDay()+6)%7;s.setDate(s.getDate()-day);e=new Date(s);e.setDate(e.getDate()+7)}else{ s.setDate(1);e=new Date(s);e.setMonth(e.getMonth()+1)}return [s,e]}
+function periodLabel(kind){let [s,e]=periodRange(kind);if(kind==='day')return s.toLocaleDateString('nl-NL');if(kind==='week')return `week ${String(Math.ceil((((s-new Date(s.getFullYear(),0,1))/86400000)+1)/7)).padStart(2,'0')} (${s.toLocaleDateString('nl-NL')} t/m ${new Date(e-86400000).toLocaleDateString('nl-NL')})`;return s.toLocaleDateString('nl-NL',{month:'long',year:'numeric'})}
+function buildPeriodSummary(kind){let [s,e]=periodRange(kind),a=get().filter(x=>new Date(x.date)>=s&&new Date(x.date)<e),cc=complaints().filter(x=>new Date(x.date)>=s&&new Date(x.date)<e),we=weights().filter(x=>new Date(x.date)>=s&&new Date(x.date)<e),ap=appointments().filter(x=>{let d=new Date(x.date);return d>=s&&d<e});let title=`GAVIN – REVALIDATIESAMENVATTING\n${kind==='day'?'DAG':kind==='week'?'WEEK':'MAAND'}: ${periodLabel(kind)}\nGemaakt: ${new Date().toLocaleString('nl-NL')}\n\n`;let out=title+`Profiel: lengte 189 cm | huidig gewicht 105 kg | streefgewicht 85 kg\n\nREGISTRATIES (${a.length})\n`;a.sort((x,y)=>new Date(x.date)-new Date(y.date)).forEach(x=>{out+=`• ${new Date(x.date).toLocaleString('nl-NL')} — ${x.type}: ${summaryLine(x)}\n`});out+='\nKLACHTEN / PIJN / GEVOEL / KRACHT\n';cc.sort((x,y)=>new Date(x.date)-new Date(y.date)).forEach(x=>{out+=`• ${new Date(x.date).toLocaleString('nl-NL')} — ${x.location}: pijn ${x.pain}/10${x.numb?' — geen/weinig gevoel':''}${x.weak?' — geen/weinig kracht':''}${x.note?' — '+x.note:''}\n`});out+=`\nGEWICHTSMETINGEN (${we.length})\n`;we.sort((x,y)=>new Date(x.date)-new Date(y.date)).forEach(x=>out+=`• ${new Date(x.date).toLocaleDateString('nl-NL')} — ${x.kg} kg${x.note?' — '+x.note:''}\n`);out+=`\nAFSPRAKEN (${ap.length})\n`;ap.sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time)).forEach(x=>out+=`• ${x.date} ${x.time||''} — ${x.type} — ${x.subject||'Afspraak'}${x.note?' — '+x.note:''}\n`);return out}
+function saveSummaryPeriod(kind){let text=buildPeriodSummary(kind),a;try{a=JSON.parse(localStorage.getItem(SKEY)||'[]')}catch(e){a=[]}a.unshift({id:Date.now(),kind,label:periodLabel(kind),savedAt:new Date().toISOString(),text});localStorage.setItem(SKEY,JSON.stringify(a.slice(0,50)));renderSavedSummaries();toast(`${kind==='day'?'Dag':kind==='week'?'Week':'Maand'}samenvatting opgeslagen`)}
+function renderSavedSummaries(){let el=$('savedSummaries');if(!el)return;let a;try{a=JSON.parse(localStorage.getItem(SKEY)||'[]')}catch(e){a=[]}el.innerHTML=a.length?'<h3>Opgeslagen samenvattingen</h3>'+a.slice(0,10).map(x=>`<div class="entry"><span class="tag">${x.kind==='day'?'Dag':x.kind==='week'?'Week':'Maand'}</span> <b>${x.label}</b><br><span class="small">Opgeslagen ${new Date(x.savedAt).toLocaleString('nl-NL')}</span><br><button onclick="printSavedSummary(${x.id})">🖨️ Afdrukken</button> <button onclick="downloadSavedSummary(${x.id})">💾 Bestand</button></div>`).join(''):'<p class="small">Nog geen opgeslagen samenvattingen.</p>'}
+function printSummaryPeriod(kind){printText(buildPeriodSummary(kind),`Gavin revalidatiesamenvatting — ${periodLabel(kind)}`)}
+function printSavedSummary(id){let a=JSON.parse(localStorage.getItem(SKEY)||'[]'),x=a.find(z=>z.id===id);if(x)printText(x.text,`Gavin revalidatiesamenvatting — ${x.label}`)}
+function downloadSavedSummary(id){let a=JSON.parse(localStorage.getItem(SKEY)||'[]'),x=a.find(z=>z.id===id);if(x)dl(x.text,`Gavin_Revalidatie_${x.kind}_${String(x.id)}.txt`)}
+function printText(t,title){let w=window.open('','_blank');if(!w){toast('Afdrukvenster kon niet worden geopend');return}w.document.write('<html><head><title>'+title.replace(/</g,'&lt;')+'</title><style>body{font-family:Arial;padding:25px;white-space:pre-wrap;line-height:1.45;color:#302532}h1{color:#5a1a68}</style></head><body><h1>'+title.replace(/</g,'&lt;')+'</h1><pre>'+t.replace(/</g,'&lt;')+'</pre></body></html>');w.document.close();setTimeout(()=>w.print(),400)}
+
+function report(days){let cut=Date.now()-days*86400000,a=get().filter(x=>new Date(x.date).getTime()>=cut),cc=complaints().filter(x=>new Date(x.date).getTime()>=cut),ap=appointments(),we=weights().filter(x=>new Date(x.date).getTime()>=cut),s='GAVIN – REVALIDATIELOG\nPersoonlijk overzicht\nLengte: 189 cm | Huidig gewicht: 105 kg | Streefgewicht: 85 kg\nPeriode: laatste '+days+' dag(en)\nGemaakt: '+new Date().toLocaleString('nl-NL')+'\n\n';a.reverse().forEach(x=>{s+='------------------------------\n'+new Date(x.date).toLocaleString('nl-NL')+'\n'+x.type.toUpperCase()+'\n'+JSON.stringify(x,null,2)+'\n'});s+='\nKLACHTEN / PIJN / GEVOEL / KRACHT\n'+JSON.stringify(cc,null,2)+'\n\nAFSPRAKEN\n'+JSON.stringify(ap,null,2)+'\n\nGEWICHT\n'+JSON.stringify(we,null,2)+'\n';return s}
+function dl(t,n){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=n;a.click()}
+
+['date-fysio','date-ergo','date-dietist','date-team','date-klacht','date-gewicht','date-avond','adate'].forEach(id=>setSectionDateToday(id));$('logAnchor').value=localDateValue();syncLogPeriodDates();$('logPeriod').addEventListener('change',syncLogPeriodDates);$('logAnchor').addEventListener('change',syncLogPeriodDates);updateRecordDateHint();seedMeds();home();restoreWalk();restoreErgo();renderSavedSummaries();
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body></html>
